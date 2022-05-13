@@ -41,6 +41,8 @@ export default class EachPin {
   }
 
   update(collection, scope) {
+    // create the scope object for templating
+    var itemData = Object.create(scope);
     var { itemName, indexName } = this.config;
     // get existing elements between the two markers
     var existing = [];
@@ -55,6 +57,7 @@ export default class EachPin {
     var entries = "entries" in collection ? [...collection.entries()] : Object.entries(collection);
     var matchedElements = new Set();
     // assemble elements and conspiracies to match items
+    // if we find them, go ahead and update
     var joined = entries.map(entry => {
       var [ index, item ] = entry;
       var element = this.elements.get(item);
@@ -62,6 +65,11 @@ export default class EachPin {
       if (element) {
         conspiracy = this.conspiracies.get(element);
         matchedElements.add(element);
+      }
+      if (conspiracy) {
+        itemData[itemName] = item;
+        itemData[indexName] = index;
+        conspiracy.update(itemData)
       }
       return { index, item, element, conspiracy }
     });
@@ -73,15 +81,27 @@ export default class EachPin {
       }
       return matched;
     });
-    // create the scope object for templating
-    var itemData = Object.create(scope);
-    // iterate through joined objects, adding/updated elements
-    joined.forEach(function(join, i) {
-      var cursor = existing[i];
+    // iterate through joined objects
+    // if they don't match the correct element at this index, we'll insert it
+    joined.forEach((join, i) => {
       var { index, item, element, conspiracy } = join;
-      // if there's no conspiracy, make one
-      // if there's no element, render the conspiracy to generate it
-      // if the element doesn't match the current cursor, insert it and modify existing
+      itemData[itemName] = item;
+      itemData[indexName] = index;
+      // if there's no element, create a conspiracy to generate it
+      if (!element) {
+        conspiracy = new Conspiracy(this.template, { unhosted: true });
+        [ element ] = conspiracy.attach(this.start, itemData);
+        this.elements.set(item, element);
+        this.conspiracies.set(element, conspiracy);
+      }
+      // if this is the correct place, remove from the existing items
+      if (element == existing[0]) {
+        existing.shift();
+      } else {
+        var before = existing[0] || this.end;
+        var parent = this.start.parentNode;
+        parent.insertBefore(element, before);
+      }
     });
   }
 

@@ -8,16 +8,17 @@
   <div class="root"></div>
 
   <template>
+    <button :on.click="clickedtestbutton" :on.click.once="clickedonceonly">TEST</button>
     <div :element="hello">
       Hello <!-- :name -->
       <ul>
-        <li :each="item, i of nested.items on data">
+        <li :each="item, i of nested.items">
           <!-- :name -->
           <a><!-- :item.label --></a>
+          <!-- :item.data -->
         </li>
       </ul>
     </div>
-    <button :on.click="clickedtestbutton" :on.click.once="clickedonceonly">TEST</button>
     <h1 :if.not="visible">TOGGLE ME <!-- :nested.counter --></h1>
     <h2 :if="visible">I'm different! <!-- :nested.counter --></h2>
   </template>
@@ -43,8 +44,10 @@
       console.log(`Got custom event: ${e.type}`);
       data.visible = !data.visible;
       data.nested.counter++;
-      data.nested.items.push({ data: data.nested.items.length, label: "ADDED" });
-      data.nested.items.push(data.nested.items.shift());
+      var index = (Math.random() * data.nested.items.length) | 0;
+      var add = { data: data.nested.items.length, label: "ADDED" };
+      data.nested.items.splice(index, 0, add);
+      // data.nested.items.push(add);
       console.log(data.nested.items);
       binding.update(data);
     });
