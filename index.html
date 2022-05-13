@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Conspiracy</title>
+</head>
+<body>
+  <div class="root"></div>
+
+  <template>
+    <div c:test="hello">
+      Hello <!-- c:name -->
+      <ul>
+        <li c:each="item, i of items on key" c:text="item.name">
+        </li>
+      </ul>
+    </div>
+    <button c:on.click="clickedtestbutton">TEST</button>
+  </template>
+
+  <script type="module">
+    import Conspiracy from "./conspiracy.js";
+
+    var root = document.querySelector(".root");
+    var template = document.querySelector("template");
+    var binding = new Conspiracy(template, {});
+    binding.attach(root, { name: "World" });
+
+    root.addEventListener("clickedtestbutton", e => console.log(e));
+  </script>
+</body>
+</html>
