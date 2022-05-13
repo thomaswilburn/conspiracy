@@ -36,7 +36,7 @@ export default class Conspiracy {
     // walk the dom and set up bindings
     this.bindings = [];
     this.elements = {};
-    var matchDirective = new RegExp(`^${this.settings.namespace}:`);
+    var isDirective = new RegExp(`^${this.settings.namespace}:`);
     var walk = (node, to) => {
       var clone = node.cloneNode(false);
       // go ahead and add this in place
@@ -46,7 +46,7 @@ export default class Conspiracy {
       // was this a text comment representing an inline value?
       if (clone instanceof Comment) {
         var data = clone.data.trim();
-        if (matchDirective.test(data)) {
+        if (isDirective.test(data)) {
           var inline = new TextPin(clone, data);
           this.bindings.push({ path: inline.path, pin: inline });
         }
@@ -55,34 +55,8 @@ export default class Conspiracy {
       // check for directives
       if ("attributes" in node) {
         var attributes = Array.from(node.attributes);
-        var directives = attributes.filter(a => matchDirective.test(a.name));
-        var terminated = false;
-        for (var d of directives) {
-          var parsed = this.parseDirectiveName(d.name);
-
-          // special handling for references
-          if (parsed.directive == "element") {
-            this.elements[d.value] = clone;
-          }
-
-          if (parsed.directive in Conspiracy.directives) {
-            if (terminated && pin.terminal) {
-              console.warn("Multiple terminal directives assigned to a single node", node);
-            }
-            // get the directive class and instantiate it
-            var PinClass = Conspiracy.directives[parsed.directive];
-            var pin = new PinClass(clone, parsed.args, d.value);
-            var { path } = pin;
-            // if the pin is reactive, add it to our bindings list
-            if (path) {
-              this.bindings.push({ path, pin });
-            }
-            terminated = terminated || pin.terminal;
-            if (this.settings.stripAttributes) {
-              clone.removeAttribute(d.name);
-            }
-          }
-        }
+        var directives = attributes.filter(a => isDirective.test(a.name));
+        var terminated = this.processDirectives(directives, node, clone);
         // if a structural directive indicated that it was terminal, stop processing here
         if (terminated) return;
       }
@@ -114,6 +88,38 @@ export default class Conspiracy {
     var [namespace, remains] = name.split(":");
     var [directive, ...args] = remains.split(".");
     return { namespace, directive, args };
+  }
+
+  processDirectives(directives, node, clone) {
+    var terminated = false;
+    for (var d of directives) {
+      var parsed = this.parseDirectiveName(d.name);
+
+      // special handling for references
+      if (parsed.directive == "element") {
+        this.elements[d.value] = clone;
+        continue;
+      }
+
+      if (parsed.directive in Conspiracy.directives) {
+        if (terminated && pin.terminal) {
+          console.warn("Multiple terminal directives assigned to a single node", node);
+        }
+        // get the directive class and instantiate it
+        var PinClass = Conspiracy.directives[parsed.directive];
+        var pin = new PinClass(clone, parsed.args, d.value);
+        var { path } = pin;
+        // if the pin is reactive, add it to our bindings list
+        if (path) {
+          this.bindings.push({ path, pin });
+        }
+        terminated = terminated || pin.terminal;
+        if (this.settings.stripAttributes) {
+          clone.removeAttribute(d.name);
+        }
+      }
+    }
+    return terminated;
   }
 
   static getPath(object, keyPath) {
