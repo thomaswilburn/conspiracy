@@ -14,7 +14,7 @@ Theory
 
   - ``:if``, ``:if.not``
   - ``:each="item, index of iterable on key"``, ``:each.entries``
-  - ``:reference`` - adds this to the instance for direct access
+  - ``:element`` - adds this to the instance's ``elements`` property for direct access
   - ``:on.(event)``, ``:on.(event).once``
   - ``:attributes``, ``:attr.(name)``, ``:attr.(name).toggle`` - base version takes an object to set from
   - ``:assign`` - takes an object to set properties from
@@ -31,7 +31,7 @@ Theory
   - terminal = true if this directive will manage its own subtree (i.e., loops)
 
 * Initialize a Conspiracy with an HTML string or a template element
-* Call update(state) on a Conspiracy to replace state, patch(state) to mutate previous state
+* Call update(state) on a Conspiracy to change the attached DOM
 
 Practice
 --------

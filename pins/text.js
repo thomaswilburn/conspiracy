@@ -1,7 +1,7 @@
 export default class TextPin {
 
   constructor(marker, path) {
-    this.path = path;
+    this.path = this.parseTextPath(path);
     this.node = document.createTextNode("");
     marker.parentNode.replaceChild(this.node, marker);
     this.value = null;
@@ -12,5 +12,11 @@ export default class TextPin {
     this.node.data = String(text);
     this.value = text;
   }
-  
+
+  parseTextPath(data) {
+    var [namespace, rest] = data.split(":");
+    var path = rest.split(".");
+    return path;
+  }
+
 }

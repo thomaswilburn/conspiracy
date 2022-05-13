@@ -9,6 +9,7 @@ export default class Conspiracy {
   template = null;
   rendered = false;
   data = null;
+  elements = {};
 
   constructor(template, config = {}) {
     this.setupTemplate(template);
@@ -33,6 +34,7 @@ export default class Conspiracy {
     this.root = root;
     // walk the dom and set up bindings
     this.bindings = [];
+    this.elements = {};
     var matchDirective = new RegExp(`^${this.settings.namespace}:`);
     var walk = (node, to) => {
       var clone = node.cloneNode(false);
@@ -43,20 +45,24 @@ export default class Conspiracy {
       // was this a text comment representing an inline value?
       if (clone instanceof Comment) {
         var data = clone.data.trim();
-        if (data.match(matchDirective)) {
-          var path = this.parseTextPath(data);
-          this.addDirective(TextPin, clone, path);
+        if (matchDirective.test(data)) {
+          this.addDirective(TextPin, clone, data);
         }
       }
 
       // check for directives
       if ("attributes" in node) {
         var attributes = Array.from(node.attributes);
-        var directives = attributes.filter(a => a.name.match(matchDirective));
+        var directives = attributes.filter(a => matchDirective.test(a.name));
         var terminated = false;
         for (var d of directives) {
           var parsed = this.parseDirectiveName(d.name);
-          // process structural directives first
+
+          // special handling for references
+          if (parsed.directive == "element") {
+            this.elements[d.value] = clone;
+          }
+
           if (parsed.directive in Conspiracy.directives) {
             if (terminated && pin.terminal) {
               console.warn("Multiple terminal directives assigned to a single node", node);
@@ -104,16 +110,6 @@ export default class Conspiracy {
       var value = Conspiracy.getPath(data, path);
       pin.update(value);
     }
-  }
-
-  patch(partial) {
-
-  }
-
-  parseTextPath(data) {
-    // strip off the front, then break into path segments
-    var [_, keys] = data.split(":");
-    return keys.split(".");
   }
 
   parseDirectiveName(name) {

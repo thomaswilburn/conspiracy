@@ -8,7 +8,7 @@
   <div class="root"></div>
 
   <template>
-    <div :test="hello">
+    <div :element="hello">
       Hello <!-- :name -->
       <ul>
         <li :each="item, i of items on key">
@@ -28,6 +28,7 @@
     var binding = new Conspiracy(template, {});
     var data = { name: "World", nested: { counter: 0 } };
     binding.attach(root, data);
+    console.log(binding.elements);
 
     var visible = false;
     root.addEventListener("clickedtestbutton", e => {
