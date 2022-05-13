@@ -16,6 +16,7 @@
       </ul>
     </div>
     <button c:on.click="clickedtestbutton">TEST</button>
+    <h1 c:if="visible">TOGGLE ME <!-- c:visible --></h1>
   </template>
 
   <script type="module">
@@ -24,9 +25,15 @@
     var root = document.querySelector(".root");
     var template = document.querySelector("template");
     var binding = new Conspiracy(template, {});
-    binding.attach(root, { name: "World" });
+    var data = { name: "World" };
+    binding.attach(root, data);
 
-    root.addEventListener("clickedtestbutton", e => console.log(e));
+    var visible = false;
+    root.addEventListener("clickedtestbutton", e => {
+      console.log(`Got custom event: ${e.type}`);
+      data.visible = !data.visible;
+      binding.update(data);
+    });
   </script>
 </body>
 </html>

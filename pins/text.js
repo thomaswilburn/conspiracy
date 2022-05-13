@@ -1,9 +1,8 @@
 export default class TextPin {
-  constructor(startMarker, path) {
-    this.start = startMarker;
+  constructor(marker, path) {
     this.path = path;
     this.node = document.createTextNode("");
-    this.start.parentNode.insertBefore(this.node, this.start.nextSibling);
+    marker.parentNode.replaceChild(this.node, marker);
     this.value = null;
   }
 

@@ -35,6 +35,9 @@ export default class Conspiracy {
     var matchDirective = new RegExp(`^${this.settings.prefix}:`);
     var walk = (node, to) => {
       var clone = node.cloneNode(false);
+      // go ahead and add this in place
+      // structural directives can then replace it
+      to.append(clone);
       // check for directives
       if ("attributes" in node) {
         var attributes = Array.from(node.attributes);
@@ -48,8 +51,8 @@ export default class Conspiracy {
               console.warn("Multiple structural directives assigned to a single node", node);
             }
             var PinClass = Conspiracy.directives.structural[parsed.directive];
-            this.addDirective(PinClass, clone, parsed.args, d.value);
-            terminated = true;
+            var pin = this.addDirective(PinClass, clone, parsed.args, d.value);
+            terminated = terminated || pin.terminal;
           }
           // process state directives second
           if (parsed.directive in Conspiracy.directives.state) {
@@ -61,8 +64,6 @@ export default class Conspiracy {
         // it will have handled the append and subtree itself
         if (terminated) return;
       }
-      // if only state directives were attached, we need to append the clone
-      to.appendChild(clone);
       // was this a text comment representing an inline value?
       if (clone instanceof Comment) {
         var data = clone.data.trim();
@@ -92,6 +93,7 @@ export default class Conspiracy {
     if (path) {
       this.bindings.push({ path, pin });
     }
+    return pin;
   }
 
   update(data) {
