@@ -46,22 +46,16 @@ export default class Conspiracy {
         for (var d of directives) {
           var parsed = this.parseDirectiveName(d.name);
           // process structural directives first
-          if (parsed.directive in Conspiracy.directives.structural) {
-            if (terminated) {
-              console.warn("Multiple structural directives assigned to a single node", node);
+          if (parsed.directive in Conspiracy.directives) {
+            if (terminated && pin.terminal) {
+              console.warn("Multiple terminal directives assigned to a single node", node);
             }
-            var PinClass = Conspiracy.directives.structural[parsed.directive];
+            var PinClass = Conspiracy.directives[parsed.directive];
             var pin = this.addDirective(PinClass, clone, parsed.args, d.value);
             terminated = terminated || pin.terminal;
           }
-          // process state directives second
-          if (parsed.directive in Conspiracy.directives.state) {
-            var PinClass = Conspiracy.directives.state[parsed.directive];
-            this.addDirective(PinClass, clone, parsed.args, d.value);
-          }
         }
-        // if a structural directive indicated that it was terminal, continue
-        // it will have handled the append and subtree itself
+        // if a structural directive indicated that it was terminal, stop processing here
         if (terminated) return;
       }
       // was this a text comment representing an inline value?
@@ -147,32 +141,14 @@ export default class Conspiracy {
     search[final] = value;
   }
 
-  static lookups = {
-    elements: new WeakMap(),
-    instances: new WeakMap(),
-    data: new WeakMap(),
-    link(element, instance) {
-      Conspiracy.lookups.elements.set(instance, element);
-      Conspiracy.lookups.instances.set(element, instance);
-    }
-  }
-
-  static directives = {
-    structural: {},
-    state: {}
-  };
-
-  static registerDirective(name, Class) {
-    var lookup = Class.structural ? Conspiracy.directives.structural : Conspiracy.directives.state;
-    lookup[name] = Class;
-  }
+  static directives = {};
 }
 
 // import and register pins
 import IfPin from "./pins/if.js";
-Conspiracy.registerDirective("if", IfPin);
+Conspiracy.directives["if"] = IfPin;
 import EventPin from "./pins/event.js";
-Conspiracy.registerDirective("on", EventPin);
+Conspiracy.directives["on"] = EventPin;
 
-// text is different, because it's inline comments, not attributes
+// text is different, because it's not based on attributes
 import TextPin from "./pins/text.js";

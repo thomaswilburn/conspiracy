@@ -1,4 +1,5 @@
 export default class TextPin {
+
   constructor(marker, path) {
     this.path = path;
     this.node = document.createTextNode("");
@@ -11,4 +12,5 @@ export default class TextPin {
     this.node.data = String(text);
     this.value = text;
   }
+  
 }

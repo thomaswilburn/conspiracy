@@ -16,7 +16,7 @@
       </ul>
     </div>
     <button c:on.click="clickedtestbutton">TEST</button>
-    <h1 c:if="visible">TOGGLE ME <!-- c:visible --></h1>
+    <h1 c:if="visible">TOGGLE ME <!-- c:nested.counter --></h1>
   </template>
 
   <script type="module">
@@ -25,13 +25,14 @@
     var root = document.querySelector(".root");
     var template = document.querySelector("template");
     var binding = new Conspiracy(template, {});
-    var data = { name: "World" };
+    var data = { name: "World", nested: { counter: 0 } };
     binding.attach(root, data);
 
     var visible = false;
     root.addEventListener("clickedtestbutton", e => {
       console.log(`Got custom event: ${e.type}`);
       data.visible = !data.visible;
+      data.nested.counter++;
       binding.update(data);
     });
   </script>

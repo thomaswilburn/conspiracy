@@ -1,4 +1,5 @@
 export default class EventPin {
+
   constructor(element, args, attribute) {
     var [event, ...rest] = args;
     var options = new Set(rest);
@@ -11,4 +12,5 @@ export default class EventPin {
     };
     element.addEventListener(event, listener, { once });
   }
+  
 }

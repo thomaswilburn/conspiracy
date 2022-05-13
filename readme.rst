@@ -22,15 +22,13 @@ Theory
   - ``c:classes`` - takes an object with truthiness to toggle
   - ``c:styles`` - takes an object to assign to the local style
   - ``c:dataset`` - takes an object to add data attributes
-* Directives are registered with the library based on whether they affect the tree (structure directives) or they only adjust attributes/properties (state directives)
 * Directive interface:
   - constructor(element, args, attributeValue)
   - update(value)
-  - path = keyPath array for checking this pin
-  - static structural - marks this as a terminal leaf that will take over subtree rendering
+  - path = keyPath array for checking this pin (not generated automatically because syntax can vary)
+  - terminal = true if this directive will manage its own subtree (i.e., loops)
 * Initialize a Conspiracy with an HTML string or a template element
 * Call update(state) on a Conspiracy to replace state, patch(state) to mutate previous state
-
 
 Practice
 --------
