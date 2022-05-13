@@ -8,15 +8,15 @@
   <div class="root"></div>
 
   <template>
-    <div c:test="hello">
-      Hello <!-- c:name -->
+    <div :test="hello">
+      Hello <!-- :name -->
       <ul>
-        <li c:each="item, i of items on key" c:text="item.name">
+        <li :each="item, i of items on key" :text="item.name">
         </li>
       </ul>
     </div>
-    <button c:on.click="clickedtestbutton">TEST</button>
-    <h1 c:if="visible">TOGGLE ME <!-- c:nested.counter --></h1>
+    <button :on.click="clickedtestbutton">TEST</button>
+    <h1 :if="visible">TOGGLE ME <!-- :nested.counter --></h1>
   </template>
 
   <script type="module">

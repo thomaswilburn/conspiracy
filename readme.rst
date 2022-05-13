@@ -8,20 +8,19 @@ Theory
 
 * Use attributes like Kudzu, try to stay HTML-compatible
 * Need a way to set properties, not just attributes
-* Directive attribute structure: ``prefix:directiveName(.option)*="value"``
-* Prefix is configurable per instance, but starts as ``c:``
+* Directive attribute structure: ``namespace?:directiveName(.option)*="value"``
 * Inline text is injected using ``<!-- c:text.value.path -->``
 * Built-in directives:
-  - ``c:if``, ``c:if.not``
-  - ``c:when.pending``, ``c:when.resolved``, ``c:when.rejected``
-  - ``c:each="item, index of iterable on key"``, ``c:each.entries``
-  - ``c:reference`` - adds this to the instance for direct access
-  - ``c:on.(event)``, ``c:on.(event).once``
-  - ``c:attributes``, ``c:attr.(name)``, ``c:attr.(name).toggle`` - base version takes an object to set from
-  - ``c:assign`` - takes an object to set properties from
-  - ``c:classes`` - takes an object with truthiness to toggle
-  - ``c:styles`` - takes an object to assign to the local style
-  - ``c:dataset`` - takes an object to add data attributes
+  - ``:if``, ``:if.not``
+  - ``:when.pending``, ``:when.resolved``, ``:when.rejected``
+  - ``:each="item, index of iterable on key"``, ``:each.entries``
+  - ``:reference`` - adds this to the instance for direct access
+  - ``:on.(event)``, ``:on.(event).once``
+  - ``:attributes``, ``:attr.(name)``, ``:attr.(name).toggle`` - base version takes an object to set from
+  - ``:assign`` - takes an object to set properties from
+  - ``:classes`` - takes an object with truthiness to toggle
+  - ``:styles`` - takes an object to assign to the local style
+  - ``:dataset`` - takes an object to add data attributes
 * Directive interface:
   - constructor(element, args, attributeValue)
   - update(value)

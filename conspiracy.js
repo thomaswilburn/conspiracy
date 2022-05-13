@@ -1,5 +1,6 @@
 const DEFAULTS = {
-  prefix: "c", // all directives will start with prefix + ":"
+  namespace: "", // all directives will start with namespace + ":"
+  stripAttributes: true, // removes directive attributes from the live DOM
 };
 
 export default class Conspiracy {
@@ -32,12 +33,22 @@ export default class Conspiracy {
     this.root = root;
     // walk the dom and set up bindings
     this.bindings = [];
-    var matchDirective = new RegExp(`^${this.settings.prefix}:`);
+    var matchDirective = new RegExp(`^${this.settings.namespace}:`);
     var walk = (node, to) => {
       var clone = node.cloneNode(false);
       // go ahead and add this in place
       // structural directives can then replace it
       to.append(clone);
+
+      // was this a text comment representing an inline value?
+      if (clone instanceof Comment) {
+        var data = clone.data.trim();
+        if (data.match(matchDirective)) {
+          var path = this.parseTextPath(data);
+          this.addDirective(TextPin, clone, path);
+        }
+      }
+
       // check for directives
       if ("attributes" in node) {
         var attributes = Array.from(node.attributes);
@@ -53,19 +64,15 @@ export default class Conspiracy {
             var PinClass = Conspiracy.directives[parsed.directive];
             var pin = this.addDirective(PinClass, clone, parsed.args, d.value);
             terminated = terminated || pin.terminal;
+            if (this.settings.stripAttributes) {
+              clone.removeAttribute(d.name);
+            }
           }
         }
         // if a structural directive indicated that it was terminal, stop processing here
         if (terminated) return;
       }
-      // was this a text comment representing an inline value?
-      if (clone instanceof Comment) {
-        var data = clone.data.trim();
-        if (data.match(matchDirective)) {
-          var path = this.parseTextPath(data);
-          this.addDirective(TextPin, clone, path);
-        }
-      }
+
       // process children
       if ("childNodes" in node && node.childNodes.length) {
         for (var child of node.childNodes) {
@@ -111,9 +118,9 @@ export default class Conspiracy {
 
   parseDirectiveName(name) {
     // strip off the front
-    var [prefix, remains] = name.split(":");
+    var [namespace, remains] = name.split(":");
     var [directive, ...args] = remains.split(".");
-    return { prefix, directive, args };
+    return { namespace, directive, args };
   }
 
   static getPath(object, keyPath) {
