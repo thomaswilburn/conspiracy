@@ -8,7 +8,7 @@ export default class TextPin {
   value = null;
   node = document.createTextNode("");
 
-  attach(marker, path) {
+  attach(template, marker, path) {
     this.path = this.parseTextPath(path);
     marker.parentNode.replaceChild(this.node, marker);
     return this.node;

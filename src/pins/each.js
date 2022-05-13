@@ -8,16 +8,15 @@ Easily the most complicated directive, this terminal class provides looping for 
 
 import Conspiracy from "../conspiracy.js";
 
-var elementFromKey = new WeakMap();
-var conspiracyFromElement = new WeakMap();
-
 export default class EachPin {
   static name = "each";
 
   terminal = true;
   template = null;
+  elements = new WeakMap();
+  conspiracies = new WeakMap();
 
-  attach(element, args, value) {
+  attach(template, element, args, value) {
     var parsed = this.parseAttribute(value);
     this.path = parsed.path;
     this.config = parsed;
@@ -26,25 +25,64 @@ export default class EachPin {
     element.parentNode.replaceChild(this.end, element);
     this.end.parentNode.insertBefore(this.start, this.end);
     this.template = document.createElement("template");
-    this.template.content.appendChild(element.cloneNode(true));
+    var cloned = template.cloneNode(true);
+    this.template.content.appendChild(cloned);
     return this.end;
   }
 
   parseAttribute(text) {
     // match parts with named regex
-    var re = /(?<item>\w+)(,\s*(?<index>\w+))?\s+of\s+(?<keyPath>[\w\.]+)(\s+on\s+(?<key>\w+))?/;
+    var re = /(?<itemName>\w+)(,\s*(?<indexName>\w+))?\s+of\s+(?<keyPath>[\w\.]+)(\s+on\s+(?<keyName>\w+))?/;
     var matches = text.match(re);
     if (!matches) throw `Unable to parse iteration statement "${text}"`;
-    var { item, index, key } = matches.groups;
+    var { itemName, indexName, keyName } = matches.groups;
     var path = matches.groups.keyPath.split(".");
-    return { item, index, key, path };
+    return { itemName, indexName, keyName, path };
   }
 
-  update(value) {
-    // collect all elements between the two markers
-    // attempt to match them against data, keyed elements first
-    // remove elements that didn't have any matches
-    // create/load a Conspiracy for each item and apply it to the cloned element
+  update(collection, scope) {
+    var { itemName, indexName } = this.config;
+    // get existing elements between the two markers
+    var existing = [];
+    var cursor = this.start;
+    while (cursor != this.end) {
+      if (cursor instanceof HTMLElement) {
+        existing.push(cursor);
+      }
+      cursor = cursor.nextSibling;
+    }
+    // convert collection into a uniform entry list
+    var entries = "entries" in collection ? [...collection.entries()] : Object.entries(collection);
+    var matchedElements = new Set();
+    // assemble elements and conspiracies to match items
+    var joined = entries.map(entry => {
+      var [ index, item ] = entry;
+      var element = this.elements.get(item);
+      var conspiracy = undefined;
+      if (element) {
+        conspiracy = this.conspiracies.get(element);
+        matchedElements.add(element);
+      }
+      return { index, item, element, conspiracy }
+    });
+    // remove unmatched elements
+    existing = existing.filter(e => {
+      var matched = matchedElements.has(e);
+      if (!matched) {
+        e.remove();
+      }
+      return matched;
+    });
+    // create the scope object for templating
+    var itemData = Object.create(scope);
+    // iterate through joined objects, adding/updated elements
+    joined.forEach(function(join, i) {
+      var cursor = existing[i];
+      var { index, item, element, conspiracy } = join;
+      // if there's no conspiracy, make one
+      // if there's no element, render the conspiracy to generate it
+      // if the element doesn't match the current cursor, insert it and modify existing
+    });
   }
 
 }

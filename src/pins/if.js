@@ -8,7 +8,7 @@
 export default class IfPin {
   static name = "if";
 
-  attach(element, args = [], attribute = "") {
+  attach(template, element, args = [], attribute = "") {
     var comment = document.createComment(` if=${attribute} `);
     this.element = element;
     this.placeholder = comment;

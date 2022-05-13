@@ -14,7 +14,7 @@ TODO: add a way to specify the event name in the attribute for uppercased events
 export default class EventPin {
   static name = "on";
 
-  attach(element, args, attribute) {
+  attach(template, element, args, attribute) {
     var [event, ...rest] = args;
     var composed = args.includes("composed");
     var once = args.includes("once");

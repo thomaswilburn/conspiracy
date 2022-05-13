@@ -12,7 +12,8 @@
       Hello <!-- :name -->
       <ul>
         <li :each="item, i of nested.items on data">
-          <span :html="item.name"></span>
+          <!-- :name -->
+          <a><!-- :item.label --></a>
         </li>
       </ul>
     </div>
@@ -31,7 +32,7 @@
       name: "World",
       nested: {
         counter: 0,
-        items: [ { data: 1, label: "A" }, { data: 2, label: "B" }]
+        items: [ { data: 0, label: "A" }, { data: 1, label: "B" }]
       },
     };
     binding.attach(root, data);
@@ -42,7 +43,9 @@
       console.log(`Got custom event: ${e.type}`);
       data.visible = !data.visible;
       data.nested.counter++;
-      console.log(data);
+      data.nested.items.push({ data: data.nested.items.length, label: "ADDED" });
+      data.nested.items.push(data.nested.items.shift());
+      console.log(data.nested.items);
       binding.update(data);
     });
 
