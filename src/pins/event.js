@@ -1,4 +1,5 @@
 export default class EventPin {
+  static name = "on";
 
   constructor(element, args, attribute) {
     var [event, ...rest] = args;

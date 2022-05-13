@@ -1,3 +1,5 @@
+import TextPin from "./pins/text.js";
+
 const DEFAULTS = {
   namespace: "", // all directives will start with namespace + ":"
   stripAttributes: true, // removes directive attributes from the live DOM
@@ -145,13 +147,8 @@ export default class Conspiracy {
   }
 
   static directives = {};
+
+  static registerDirective(Class) {
+    Conspiracy.directives[Class.name] = Class;
+  }
 }
-
-// import and register pins
-import IfPin from "./pins/if.js";
-Conspiracy.directives["if"] = IfPin;
-import EventPin from "./pins/event.js";
-Conspiracy.directives["on"] = EventPin;
-
-// text is different, because it's not based on attributes
-import TextPin from "./pins/text.js";

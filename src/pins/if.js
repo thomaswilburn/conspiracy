@@ -1,4 +1,5 @@
 export default class IfPin {
+  static name = "if";
 
   constructor(element, args, attribute) {
     var comment = document.createComment(` if=${attribute} `);
