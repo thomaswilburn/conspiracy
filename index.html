@@ -9,8 +9,8 @@
 
   <template>
     <button :on.click="clickedtestbutton" :on.click.once="clickedonceonly">TEST</button>
-    <div :element="hello">
-      Hello <!-- :name -->
+    <div :element="hello" :on.mousemove="hellomoved">
+      Hello <!-- :name --> <!-- :coords -->
       <ul>
         <li :each="item, i of nested.items">
           <!-- :name -->
@@ -44,11 +44,18 @@
       console.log(`Got custom event: ${e.type}`);
       data.visible = !data.visible;
       data.nested.counter++;
-      var index = (Math.random() * data.nested.items.length) | 0;
+      var index = (Math.random() * (data.nested.items.length + 1)) | 0;
       var add = { data: data.nested.items.length, label: "ADDED" };
       data.nested.items.splice(index, 0, add);
       // data.nested.items.push(add);
-      console.log(data.nested.items);
+      // console.log(data.nested.items);
+      binding.update(data);
+    });
+
+    document.body.addEventListener("hellomoved", e => {
+      var moved = e.originalEvent;
+      var coords = [moved.clientX, moved.clientY].join();
+      data.coords = coords;
       binding.update(data);
     });
 

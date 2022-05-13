@@ -11,16 +11,23 @@ TODO: add a way to specify the event name in the attribute for uppercased events
 
 */
 
+class WrappedEvent extends Event {
+  constructor(type, original, options = {}) {
+    super(type, { bubbles: true, ...options });
+    this.originalEvent = original;
+  }
+}
+
 export default class EventPin {
   static name = "on";
 
-  attach(template, element, args, attribute) {
+  attach(template, element, args, custom) {
     var [event, ...rest] = args;
     var composed = args.includes("composed");
     var once = args.includes("once");
     var bubbles = true;
-    var listener = function() {
-      var e = new CustomEvent(attribute, { bubbles, composed });
+    var listener = function(original) {
+      var e = new WrappedEvent(custom, original, { composed });
       element.dispatchEvent(e);
     };
     element.addEventListener(event, listener, { once });

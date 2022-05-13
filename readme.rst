@@ -15,7 +15,7 @@ Theory
 * Built-in directives:
 
   - ``:if``, ``:if.not``
-  - ``:each="item, index of iterable"`` - note this caches on object identity
+  - ``:each="item, index of iterable"`` - relies on object identity to match existing elements
   - ``:element`` - adds this to the instance's ``elements`` property for direct access
   - ``:on.(event)``, ``:on.(event).once``
   - ``:attributes``, ``:attr.(name)``, ``:attr.(name).toggle`` - base version takes an object to set from
