@@ -11,32 +11,42 @@
     <div :element="hello">
       Hello <!-- :name -->
       <ul>
-        <li :each="item, i of items on key">
+        <li :each="item, i of nested.items on data">
           <span :html="item.name"></span>
         </li>
       </ul>
     </div>
-    <button :on.click="clickedtestbutton">TEST</button>
-    <h1 :if="visible">TOGGLE ME <!-- :nested.counter --></h1>
+    <button :on.click="clickedtestbutton" :on.click.once="clickedonceonly">TEST</button>
+    <h1 :if.not="visible">TOGGLE ME <!-- :nested.counter --></h1>
+    <h2 :if="visible">I'm different! <!-- :nested.counter --></h2>
   </template>
 
   <script type="module">
     import { Conspiracy } from "./src/index.js";
 
     var root = document.querySelector(".root");
-    var template = document.querySelector("template");
-    var binding = new Conspiracy(template, {});
-    var data = { name: "World", nested: { counter: 0 } };
+    var template = document.querySelector("template").innerHTML.trim();
+    var binding = new Conspiracy(template, { unhosted: 0 });
+    var data = {
+      name: "World",
+      nested: {
+        counter: 0,
+        items: [ { data: 1, label: "A" }, { data: 2, label: "B" }]
+      },
+    };
     binding.attach(root, data);
     console.log(binding.elements);
 
     var visible = false;
-    root.addEventListener("clickedtestbutton", e => {
+    document.body.addEventListener("clickedtestbutton", e => {
       console.log(`Got custom event: ${e.type}`);
       data.visible = !data.visible;
       data.nested.counter++;
+      console.log(data);
       binding.update(data);
     });
+
+    document.body.addEventListener("clickedonceonly", e => console.log(e.type));
   </script>
 </body>
 </html>

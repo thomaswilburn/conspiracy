@@ -1,10 +1,17 @@
-export default class TextPin {
+/*
 
-  constructor(marker, path) {
+Text pins create and update inline text nodes
+
+*/
+
+export default class TextPin {
+  value = null;
+  node = document.createTextNode("");
+
+  attach(marker, path) {
     this.path = this.parseTextPath(path);
-    this.node = document.createTextNode("");
     marker.parentNode.replaceChild(this.node, marker);
-    this.value = null;
+    return this.node;
   }
 
   update(text) {

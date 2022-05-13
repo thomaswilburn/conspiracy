@@ -9,7 +9,9 @@ Theory
 * Use attributes like Kudzu, try to stay HTML-compatible
 * Need a way to set properties, not just attributes
 * Directive attribute structure: ``namespace?:directiveName(.option)*="value"``
-* Inline text is injected using ``<!-- :text.value.path -->``
+  - namespace is optional, but can be added to avoid conflicts with Vue or something
+  - options are provided as a dot-separated list after the directive name
+* Inline text is injected using ``<!-- :path.to.value -->``, no directive name
 * Built-in directives:
 
   - ``:if``, ``:if.not``
@@ -29,6 +31,7 @@ Theory
   - update(value)
   - path = keyPath array for checking this pin (not generated automatically because syntax can vary)
   - terminal = true if this directive will manage its own subtree (i.e., loops)
+  - static name = the directiveName when parsing
 
 * Initialize a Conspiracy with an HTML string or a template element
 * Call update(state) on a Conspiracy to change the attached DOM
@@ -41,3 +44,4 @@ Practice
 * React and Lit want you to think about data as a functional transform
 * Conspiracy wants you to think about DOM as a persistent architecture affected by data, not as a side effect
 * Loads templates from strings for now, but supports templates for when HTML import assertions are available
+* Preprocessing could add some sugar as an option (e.g., replace ``{text.insertion}`` with the inline comment)

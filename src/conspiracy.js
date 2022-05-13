@@ -3,6 +3,7 @@ import TextPin from "./pins/text.js";
 const DEFAULTS = {
   namespace: "", // all directives will start with namespace + ":"
   stripAttributes: true, // removes directive attributes from the live DOM
+  unhosted: false // applies items after a marker, not in a container root
 };
 
 export default class Conspiracy {
@@ -31,24 +32,42 @@ export default class Conspiracy {
     return this.template;
   }
 
+  appendElement(target, element, after = false) {
+    if (after) {
+      var marker = target.nextSibling;
+      var parent = target.parentNode;
+      parent.insertBefore(element, marker);
+    } else {
+      target.appendChild(element);
+    }
+  }
+
   attach(root, data = {}) {
     this.root = root;
     // walk the dom and set up bindings
     this.bindings = [];
     this.elements = {};
     var isDirective = new RegExp(`^${this.settings.namespace}:`);
-    var walk = (node, to) => {
+    var walk = (node, dest, after = false) => {
       var clone = node.cloneNode(false);
       // go ahead and add this in place
       // structural directives can then replace it
-      to.append(clone);
+      this.appendElement(dest, clone, after);
+
+      // cursor tracks our place in the DOM
+      // if a pin replaces the cloned element, it'll return a new cursor value
+      // we really only need this for loops, which are "unhosted" roots
+      var cursor = clone;
 
       // was this a text comment representing an inline value?
       if (clone instanceof Comment) {
         var data = clone.data.trim();
         if (isDirective.test(data)) {
-          var inline = new TextPin(clone, data);
+          var inline = new TextPin();
+          cursor = inline.attach(clone, data);
           this.bindings.push({ path: inline.path, pin: inline });
+          // return early, there's no more attributes or subtree for comments
+          return cursor;
         }
       }
 
@@ -56,9 +75,10 @@ export default class Conspiracy {
       if ("attributes" in node) {
         var attributes = Array.from(node.attributes);
         var directives = attributes.filter(a => isDirective.test(a.name));
-        var terminated = this.processDirectives(directives, node, clone);
+        // get flags and element replacement from the processing
+        var { terminated, cursor } = this.processDirectives(directives, node, clone);
         // if a structural directive indicated that it was terminal, stop processing here
-        if (terminated) return;
+        if (terminated) return cursor;
       }
 
       // process children
@@ -67,10 +87,19 @@ export default class Conspiracy {
           walk(child, clone);
         }
       }
+      // return the latest element added to the DOM
+      return cursor;
     };
     // walk the initial set of nodes
-    for (var top of this.template.content.childNodes) {
-      walk(top, this.root);
+    var starter = Array.from(this.template.content.childNodes);
+    var root = this.root;
+    var { unhosted } = this.settings;
+    for (var top of starter) {
+      var result = walk(top, root, unhosted);
+      // when unhosted, insert each node after the previous
+      if (unhosted) {
+        root = result;
+      }
     }
     // run the initial update
     this.update(data);
@@ -90,8 +119,9 @@ export default class Conspiracy {
     return { namespace, directive, args };
   }
 
-  processDirectives(directives, node, clone) {
+  processDirectives(directives, original, clone) {
     var terminated = false;
+    var cursor = clone;
     for (var d of directives) {
       var parsed = this.parseDirectiveName(d.name);
 
@@ -102,24 +132,26 @@ export default class Conspiracy {
       }
 
       if (parsed.directive in Conspiracy.directives) {
-        if (terminated && pin.terminal) {
-          console.warn("Multiple terminal directives assigned to a single node", node);
-        }
         // get the directive class and instantiate it
         var PinClass = Conspiracy.directives[parsed.directive];
-        var pin = new PinClass(clone, parsed.args, d.value);
+        var pin = new PinClass();
+        // the pin can replace the element on attachment, in which case we update the cursor
+        cursor = pin.attach(clone, parsed.args, d.value);
+        if (terminated && pin.terminal) {
+          console.warn("Multiple terminal directives assigned to a single node", original);
+        }
         var { path } = pin;
         // if the pin is reactive, add it to our bindings list
         if (path) {
           this.bindings.push({ path, pin });
         }
         terminated = terminated || pin.terminal;
-        if (this.settings.stripAttributes) {
+        if (this.settings.stripAttributes && "removeAttribute" in clone) {
           clone.removeAttribute(d.name);
         }
       }
     }
-    return terminated;
+    return { terminated, cursor };
   }
 
   static getPath(object, keyPath) {
