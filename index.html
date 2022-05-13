@@ -11,7 +11,8 @@
     <div :test="hello">
       Hello <!-- :name -->
       <ul>
-        <li :each="item, i of items on key" :text="item.name">
+        <li :each="item, i of items on key">
+          <span :html="item.name"></span>
         </li>
       </ul>
     </div>

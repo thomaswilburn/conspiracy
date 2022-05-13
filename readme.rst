@@ -9,10 +9,10 @@ Theory
 * Use attributes like Kudzu, try to stay HTML-compatible
 * Need a way to set properties, not just attributes
 * Directive attribute structure: ``namespace?:directiveName(.option)*="value"``
-* Inline text is injected using ``<!-- c:text.value.path -->``
+* Inline text is injected using ``<!-- :text.value.path -->``
 * Built-in directives:
+
   - ``:if``, ``:if.not``
-  - ``:when.pending``, ``:when.resolved``, ``:when.rejected``
   - ``:each="item, index of iterable on key"``, ``:each.entries``
   - ``:reference`` - adds this to the instance for direct access
   - ``:on.(event)``, ``:on.(event).once``
@@ -21,11 +21,15 @@ Theory
   - ``:classes`` - takes an object with truthiness to toggle
   - ``:styles`` - takes an object to assign to the local style
   - ``:dataset`` - takes an object to add data attributes
+  - ``:html`` - unsafe by default
+
 * Directive interface:
+
   - constructor(element, args, attributeValue)
   - update(value)
   - path = keyPath array for checking this pin (not generated automatically because syntax can vary)
   - terminal = true if this directive will manage its own subtree (i.e., loops)
+
 * Initialize a Conspiracy with an HTML string or a template element
 * Call update(state) on a Conspiracy to replace state, patch(state) to mutate previous state
 
@@ -36,3 +40,4 @@ Practice
 * Intended primarily for shallow heirarchy, not page-deep templates
 * React and Lit want you to think about data as a functional transform
 * Conspiracy wants you to think about DOM as a persistent architecture affected by data, not as a side effect
+* Loads templates from strings for now, but supports templates for when HTML import assertions are available
