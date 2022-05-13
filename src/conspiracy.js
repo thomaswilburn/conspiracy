@@ -10,7 +10,6 @@ export default class Conspiracy {
   root = null;
   template = null;
   rendered = false;
-  data = null;
   elements = {};
 
   constructor(template, config = {}) {
@@ -48,7 +47,8 @@ export default class Conspiracy {
       if (clone instanceof Comment) {
         var data = clone.data.trim();
         if (matchDirective.test(data)) {
-          this.addDirective(TextPin, clone, data);
+          var inline = new TextPin(clone, data);
+          this.bindings.push({ path: inline.path, pin: inline });
         }
       }
 
@@ -69,8 +69,14 @@ export default class Conspiracy {
             if (terminated && pin.terminal) {
               console.warn("Multiple terminal directives assigned to a single node", node);
             }
+            // get the directive class and instantiate it
             var PinClass = Conspiracy.directives[parsed.directive];
-            var pin = this.addDirective(PinClass, clone, parsed.args, d.value);
+            var pin = new PinClass(clone, parsed.args, d.value);
+            var { path } = pin;
+            // if the pin is reactive, add it to our bindings list
+            if (path) {
+              this.bindings.push({ path, pin });
+            }
             terminated = terminated || pin.terminal;
             if (this.settings.stripAttributes) {
               clone.removeAttribute(d.name);
@@ -96,18 +102,7 @@ export default class Conspiracy {
     this.update(data);
   }
 
-  addDirective(Class, element, args, value) {
-    var pin = new Class(element, args, value);
-    var { path } = pin;
-    if (path) {
-      this.bindings.push({ path, pin });
-    }
-    return pin;
-  }
-
   update(data) {
-    // remember this for patches
-    this.data = data;
     for (var { pin, path } of this.bindings) {
       var value = Conspiracy.getPath(data, path);
       pin.update(value);
