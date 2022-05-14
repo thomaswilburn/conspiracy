@@ -37,6 +37,41 @@ export class AttributesPin {
 }
 
 /*
+  Single attribute setter. Usable only for lower-case attributes at this time.
+  TODO: add support for upcase using the code from Kudzu.
+*/
+
+export class AttrPin {
+  static name = "attr";
+
+  target = null;
+  attributeName = null;
+  previous = null;
+
+  attach(original, node, args, value) {
+    var [ attr ] = args;
+    this.attributeName = attr;
+    this.target = node;
+    this.path = value.split(".");
+    return node;
+  }
+
+  update(value) {
+    var attr = this.attributeName;
+    if (value == this.previous) return;
+    if (typeof value == "undefined" || value == null) {
+      this.target.removeAttribute(attr);
+    } else if (typeof value == "boolean") {
+      this.target.toggleAttribute(attr, value);
+    } else {
+      this.target.setAttribute(attr, value);
+    }
+    this.previous = value;
+  }
+
+}
+
+/*
 
 Special helper for the class attribute, toggles items off and on
 

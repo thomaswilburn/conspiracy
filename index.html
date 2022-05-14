@@ -22,7 +22,7 @@
       <ul>
         <li :each="item, i of nested.items">
           <!-- :name -->
-          <a><!-- :item.label --></a>
+          <a :attr.href="item.url"><!-- :item.label --></a>
           <!-- :item.data -->
         </li>
       </ul>
@@ -40,7 +40,7 @@
 
     var root = document.querySelector(".root");
     var template = document.querySelector("template").innerHTML.trim();
-    var binding = new Conspiracy(template, { unhosted: 0 });
+    var binding = new Conspiracy(template, { unhosted: 0, stripDirectives: true });
     var data = {
       name: "World",
       containerClass: {
@@ -68,9 +68,28 @@
       },
       nested: {
         counter: 0,
-        items: [ { data: 0, label: "A" }, { data: 1, label: "B" }]
+        items: []
       },
     };
+
+    var urlGetter = {
+      get() {
+        return "#" + this.data;
+      }
+    };
+
+    var makeItem = function(label) {
+      var id = data.nested.items.length;
+      return {
+        data: id,
+        label,
+        get url() { return "#" + this.data }
+      };
+    };
+
+    data.nested.items.push(makeItem("A"));
+    data.nested.items.push(makeItem("B"));
+
     binding.attach(root, data);
     console.log(binding.elements);
 
@@ -80,12 +99,10 @@
       data.visible = !data.visible;
       data.nested.counter++;
       var index = (Math.random() * (data.nested.items.length + 1)) | 0;
-      var add = { data: data.nested.items.length, label: "ADDED" };
+      var add = makeItem("ADDED");
       data.nested.items.splice(index, 0, add);
       // data.nested.items.push(add);
       console.log(data.nested.items);
-      binding.update(data);
-      binding.update(data);
       binding.update(data);
     });
 
@@ -93,6 +110,7 @@
       var moved = e.originalEvent;
       var coords = [moved.clientX, moved.clientY].join();
       data.coords = coords;
+      data.inputProps.value = coords;
       binding.update(data);
     });
 
