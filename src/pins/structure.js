@@ -9,11 +9,11 @@ export class IfPin {
   static name = "if";
 
   attach(template, element, args = [], attribute = "") {
-    var comment = document.createComment(` if=${attribute} `);
-    this.element = element;
-    this.placeholder = comment;
-    this.path = attribute.split(".");
     this.reverse = args.includes("not");
+    this.path = attribute.split(".");
+    this.element = element;
+    var comment = document.createComment(` if${this.reverse ? " !" : " "}${attribute} `);
+    this.placeholder = comment;
     element.parentNode.replaceChild(comment, element);
     return comment;
   }
@@ -31,9 +31,11 @@ export class IfPin {
 
 /*
 
-:each="item, index of iterable on key"
+:each="item, index of iterable"
 
-Easily the most complicated directive, this terminal class provides looping for iterable collections. If the collection doesn't have Symbol.iterator, Object.entries() will be used to loop over its key/value pairs. The "on key" syntax lets you specify a property that is used to match elements to their data, preventing needless DOM churn.
+Easily the most complicated directive, this terminal class provides looping for iterable collections. If the collection doesn't have Symbol.iterator, Object.entries() will be used to loop over its key/value pairs.
+
+TODO: It's probably still possible to add "on {key}" support to this instead of using reference identity for element matching, it's just complicated by trying to do that lookup without leaking memory.
 
 */
 
@@ -46,17 +48,23 @@ export class EachPin {
   template = null;
   elements = new WeakMap();
   conspiracies = new WeakMap();
+  options = {}
 
-  attach(template, element, args, value) {
+  constructor(options) {
+    this.options = options;
+  }
+
+  attach(template, element, args, value, attribute) {
     var parsed = this.parseAttribute(value);
     this.path = parsed.path;
     this.config = parsed;
-    this.start = document.createComment(value);
+    this.start = document.createComment("start " + value);
     this.end = document.createComment("end " + value);
     element.parentNode.replaceChild(this.end, element);
     this.end.parentNode.insertBefore(this.start, this.end);
     this.template = document.createElement("template");
     var cloned = template.cloneNode(true);
+    cloned.attributes.removeNamedItem(attribute.name);
     this.template.content.appendChild(cloned);
     return this.end;
   }
@@ -120,7 +128,7 @@ export class EachPin {
       itemData[indexName] = index;
       // if there's no element, create a conspiracy to generate it
       if (!element) {
-        conspiracy = new Conspiracy(this.template, { unhosted: true });
+        conspiracy = new Conspiracy(this.template, { ...this.options, unhosted: true });
         [ element ] = conspiracy.attach(this.start, itemData);
         // since weakmap keys must be objects, we can only cache elements for object values
         if (typeof item == "object") {

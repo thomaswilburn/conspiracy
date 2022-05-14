@@ -2,14 +2,14 @@ import TextPin from "./pins/text.js";
 
 const DEFAULTS = {
   namespace: "", // all directives will start with namespace + ":"
-  unhosted: false // applies items after a marker, not in a container root
+  unhosted: false, // applies items after a marker, not in a container root
+  stripDirectives: false // remove directive attributes from the output
 };
 
 export default class Conspiracy {
   bindings = [];
   root = null;
   template = null;
-  rendered = false;
   elements = {};
 
   constructor(template, config = {}) {
@@ -62,7 +62,7 @@ export default class Conspiracy {
       if (clone instanceof Comment) {
         var data = clone.data.trim();
         if (isDirective.test(data)) {
-          var inline = new TextPin();
+          var inline = new TextPin(this.settings, this);
           cursor = inline.attach(node, clone, data);
           this.bindings.push({ path: inline.path, pin: inline });
           // return early, there's no more attributes or subtree for comments
@@ -131,21 +131,26 @@ export default class Conspiracy {
       // special handling for references
       if (parsed.directive == "element") {
         this.elements[d.value] = clone;
+        if (this.settings.stripDirectives) {
+          clone.attributes.removeNamedItem(d.name);
+        }
         continue;
       }
 
       if (parsed.directive in Conspiracy.directives) {
         // get the directive class and instantiate it
         var PinClass = Conspiracy.directives[parsed.directive];
-        var pin = new PinClass();
+        var pin = new PinClass(this.settings, this);
         if (pin.terminal) {
-          // remove terminal directives so they don't recurse
-          original.attributes.removeNamedItem(d.name);
           // track these
           terminated.push(PinClass.name);
         }
+        // remove attributes from the clone
+        if (this.settings.stripDirectives) {
+          clone.attributes.removeNamedItem(d.name);
+        }
         // the pin can replace the element on attachment, in which case we update the cursor
-        cursor = pin.attach(original, clone, parsed.args, d.value);
+        cursor = pin.attach(original, clone, parsed.args, d.value, d);
         
         var { path } = pin;
         // if the pin is reactive, add it to our bindings list
