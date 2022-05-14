@@ -1,0 +1,22 @@
+{
+  "name": "conspiracy",
+  "description": "Conspiracy\r ==========",
+  "version": "1.0.0",
+  "main": "rollup.config.js",
+  "scripts": {
+    "build": "rollup --config"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomaswilburn/conspiracy.git"
+  },
+  "author": "Thomas Wilburn",
+  "bugs": {
+    "url": "https://github.com/thomaswilburn/conspiracy/issues"
+  },
+  "homepage": "https://github.com/thomaswilburn/conspiracy#readme",
+  "dependencies": {
+    "rollup": "^2.73.0",
+    "rollup-plugin-terser": "^7.0.2"
+  }
+}

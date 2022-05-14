@@ -29,6 +29,10 @@
     </div>
     <h1 :if.not="visible">TOGGLE ME <!-- :nested.counter --></h1>
     <h2 :if="visible">I'm different! <!-- :nested.counter --></h2>
+    <ul>
+      <li :each="value, key of button">
+        <!-- :key -->: <!-- :value -->
+    </ul>
   </template>
 
   <script type="module">
@@ -79,7 +83,9 @@
       var add = { data: data.nested.items.length, label: "ADDED" };
       data.nested.items.splice(index, 0, add);
       // data.nested.items.push(add);
-      // console.log(data.nested.items);
+      console.log(data.nested.items);
+      binding.update(data);
+      binding.update(data);
       binding.update(data);
     });
 
