@@ -20,11 +20,13 @@
     <div :element="hello" :on.mousemove="hellomoved" class="container unwanted" :classes="containerClass">
       Hello <!-- :name --> <!-- :coords -->
       <ul>
+        <li>FIRST
         <li :each="item, i of nested.items">
           <!-- :name -->
           <a :attr.href="item.url"><!-- :item.label --></a>
           <!-- :item.data -->
         </li>
+        <li>LAST
       </ul>
     </div>
     <h1 :if.not="visible">TOGGLE ME <!-- :nested.counter --></h1>
@@ -32,6 +34,10 @@
     <ul>
       <li :each="value, key of button">
         <!-- :key -->: <!-- :value -->
+    </ul>
+    <ul>
+      <li :each="key, value of mapTest">
+        <!-- :key.text --> -> <!-- :value.text -->
     </ul>
   </template>
 
@@ -70,6 +76,7 @@
         counter: 0,
         items: []
       },
+      mapTest: new Map([[{ text: "alpha"}, { text: "uno"}], [{ text: "beta" }, { text: "dos" }]])
     };
 
     var urlGetter = {
