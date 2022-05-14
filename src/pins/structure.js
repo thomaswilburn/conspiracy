@@ -122,7 +122,10 @@ export class EachPin {
       if (!element) {
         conspiracy = new Conspiracy(this.template, { unhosted: true });
         [ element ] = conspiracy.attach(this.start, itemData);
-        this.elements.set(item, element);
+        // since weakmap keys must be objects, we can only cache elements for object values
+        if (typeof item == "object") {
+          this.elements.set(item, element);
+        }
         this.conspiracies.set(element, conspiracy);
       }
       // if this is the correct place, remove from the existing items
