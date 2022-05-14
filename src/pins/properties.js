@@ -17,8 +17,12 @@ export class AssignPin {
   update(props) {
     for (var k in props) {
       var path = k.split(".");
+      var v = props[k];
+      // don't set primitives to the same value
+      if (typeof v !== "object" && v == this.previous[k]) continue;
       setPath(this.target, path, props[k]);
     }
+    Object.assign(this.previous, props);
   }
 }
 
