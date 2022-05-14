@@ -18,7 +18,7 @@ class WrappedEvent extends Event {
   }
 }
 
-export default class EventPin {
+export class EventPin {
   static name = "on";
 
   attach(template, element, args, custom) {

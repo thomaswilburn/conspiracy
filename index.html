@@ -8,8 +8,16 @@
   <div class="root"></div>
 
   <template>
-    <button :on.click="clickedtestbutton" :on.click.once="clickedonceonly">TEST</button>
-    <div :element="hello" :on.mousemove="hellomoved">
+    <button
+      placeholder="true"
+      :on.click="clickedtestbutton"
+      :on.click.once="clickedonceonly"
+      :attributes="button"
+      :styles="buttonStyles"
+      :dataset="buttonData"
+    >TEST</button>
+    <input :assign="inputProps"></input>
+    <div :element="hello" :on.mousemove="hellomoved" class="container unwanted" :classes="containerClass">
       Hello <!-- :name --> <!-- :coords -->
       <ul>
         <li :each="item, i of nested.items">
@@ -31,6 +39,29 @@
     var binding = new Conspiracy(template, { unhosted: 0 });
     var data = {
       name: "World",
+      containerClass: {
+        unwanted: false,
+        chonky: true
+      },
+      button: {
+        "aria-toggled": "false",
+        test: 123,
+        placeholder: undefined,
+        controls: true
+      },
+      buttonStyles: {
+        backgroundColor: "salmon",
+        border: "1px solid black",
+        padding: "20px",
+        display: "block",
+        margin: "8px 0"
+      },
+      buttonData: {
+        tagged: 123
+      },
+      inputProps: {
+        value: "assigned"
+      },
       nested: {
         counter: 0,
         items: [ { data: 0, label: "A" }, { data: 1, label: "B" }]

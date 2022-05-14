@@ -3,6 +3,13 @@ Conspiracy
 
 A very small library for doing templating in a web component, with minimal abstractions over the DOM.
 
+To-do
+-----
+
+- write docs
+- get feedback
+- add caching
+
 Theory
 ------
 
@@ -18,12 +25,11 @@ Theory
   - ``:each="item, index of iterable"`` - relies on object identity to match existing elements
   - ``:element`` - adds this to the instance's ``elements`` property for direct access
   - ``:on.(event)``, ``:on.(event).once``
-  - ``:attributes``, ``:attr.(name)``, ``:attr.(name).toggle`` - base version takes an object to set from
-  - ``:assign`` - takes an object to set properties from
-  - ``:classes`` - takes an object with truthiness to toggle
+  - ``:attributes`` - takes an object containing attribute name->value pairs to set
+  - ``:assign`` - takes an object containing property keypaths->values to set
+  - ``:classes`` - takes an object of classNames toggled based on truthiness
   - ``:styles`` - takes an object to assign to the local style
   - ``:dataset`` - takes an object to add data attributes
-  - ``:html`` - unsafe by default
 
 * Directive interface:
 

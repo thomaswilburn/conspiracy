@@ -1,5 +1,36 @@
 /*
 
+:if adds or removes an element from the DOM based on the truthiness of its input
+:if.not to reverse
+
+*/
+
+export class IfPin {
+  static name = "if";
+
+  attach(template, element, args = [], attribute = "") {
+    var comment = document.createComment(` if=${attribute} `);
+    this.element = element;
+    this.placeholder = comment;
+    this.path = attribute.split(".");
+    this.reverse = args.includes("not");
+    element.parentNode.replaceChild(comment, element);
+    return comment;
+  }
+
+  update(value) {
+    var { element, placeholder } = this;
+    if (this.reverse) value = !value;
+    if (value) {
+      placeholder.parentNode.insertBefore(element, placeholder);
+    } else {
+      element.remove();
+    }
+  }
+}
+
+/*
+
 :each="item, index of iterable on key"
 
 Easily the most complicated directive, this terminal class provides looping for iterable collections. If the collection doesn't have Symbol.iterator, Object.entries() will be used to loop over its key/value pairs. The "on key" syntax lets you specify a property that is used to match elements to their data, preventing needless DOM churn.
@@ -8,7 +39,7 @@ Easily the most complicated directive, this terminal class provides looping for 
 
 import Conspiracy from "../conspiracy.js";
 
-export default class EachPin {
+export class EachPin {
   static name = "each";
 
   terminal = true;
