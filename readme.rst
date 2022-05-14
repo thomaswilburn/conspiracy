@@ -1,53 +1,78 @@
 Conspiracy
 ==========
 
-A very small library for doing templating in a web component, with minimal abstractions over the DOM.
+A templating/data binding library for cranks and weirdos. Intended to be a small, fast solution for building web components.
 
-To-do
------
-
-- write docs
-- get feedback
-- add caching
+* <3KB when minified and gzipped
+* Easy to understand and extend
+* Plain templating language: no need to map() when you want to repeat an element
+* Selective updates: only changes the page where necessary, without a VDOM
+* Designed for the future of ES modules
 
 Theory
-------
+======
 
-* Use attributes like Kudzu, try to stay HTML-compatible
-* Need a way to set properties, not just attributes
-* Directive attribute structure: ``namespace?:directiveName(.option)*="value"``
-  - namespace is optional, but can be added to avoid conflicts with Vue or something
-  - options are provided as a dot-separated list after the directive name
-* Inline text is injected using ``<!-- :path.to.value -->``, no directive name
-* Built-in directives:
+Web components provide developers with a toolkit for building blocks of UI that are easy to reason about and compose. However, the current family of APIs has a substantial gap when it comes to populating the contents of components. With the removal of HTML imports, there is no longer an easy way to bundle a ``<template>`` with your custom element definition, and there was never really a built-in method to bind data to parts of that template.
 
-  - ``:if``, ``:if.not``
-  - ``:each="item, index of iterable"`` - relies on object identity to match existing elements
-  - ``:element`` - adds this to the instance's ``elements`` property for direct access
-  - ``:on.(event)``, ``:on.(event).once``
-  - ``:attributes`` - takes an object containing attribute name->value pairs to set
-  - ``:assign`` - takes an object containing property keypaths->values to set
-  - ``:classes`` - takes an object of classNames toggled based on truthiness
-  - ``:styles`` - takes an object to assign to the local style
-  - ``:dataset`` - takes an object to add data attributes
+Conspiracy aims to fill that gap, and to do so according to a set of premises that are philosophically congruent with web components. These premises make Conspiracy, like its namesake, peculiarly opinionated but (I hope) internally coherent. They are:
 
-* Directive interface:
+* The DOM is not something to be avoided or abstracted away. It's the fundamental grain of the platform.
+* It's easier to reason about and debug templates that are written as annotations to regular HTML, not as a series of nested function expressions.
+* It's easier to create and debug a mutable view object than to manage hooks that hide state behind a chain of functions.
+* New syntax and JavaScript building blocks (such as property getters and ``Proxy`` objects) allow us to generate a simpler view object from a complex internal state.
+* Custom elements are best designed around a flow of properties and attributes flowing "down" the document tree, and events bubbling back up.
+* Encapsulation guarantees from custom elements and shadow DOM mean that we can incorporate patterns that make class-based JavaScript easier to understand.
+* Shadow DOM is most effective in moderation, with a shallow tree. To compose components, it's better to use ``<slot>`` than to nest shadow DOM repeatedly.
+* We should be able to load markup from strings for now, in order to perform well with bundlers like Rollup and baseline ES modules, but aim for a future where module type assertions make single-file components (combining HTML, CSS, and JavaScript) ``import``-able again.
 
-  - constructor(element, args, attributeValue)
-  - update(value)
-  - path = keyPath array for checking this pin (not generated automatically because syntax can vary)
-  - terminal = true if this directive will manage its own subtree (i.e., loops)
-  - static name = the directiveName when parsing
+In practice, Conspiracy feels closer to Vue or Svelte than to React or Lit. However, it provides less "sugar" than those frameworks by default. For more detailed comparisons, see the section below.
 
-* Initialize a Conspiracy with an HTML string or a template element
-* Call update(state) on a Conspiracy to change the attached DOM
+Basic usage
+===========
 
-Practice
---------
 
-* Event listeners dispatch new custom events--we assume you're listening for those on the element
-* Intended primarily for shallow heirarchy, not page-deep templates
-* React and Lit want you to think about data as a functional transform
-* Conspiracy wants you to think about DOM as a persistent architecture affected by data, not as a side effect
-* Loads templates from strings for now, but supports templates for when HTML import assertions are available
-* Preprocessing could add some sugar as an option (e.g., replace ``{text.insertion}`` with the inline comment)
+
+Directory of directives
+=======================
+
+This space intentionally left blank.
+
+``:if``
+-------
+
+``:each``
+---------
+
+``:on.{event}``
+---------------
+
+``:attributes``
+---------------
+
+``:classes``
+------------
+
+``:assign``
+-----------
+
+``:styles``
+-----------
+
+``:dataset``
+------------
+
+Custom directives
+=================
+
+This space intentionally left blank.
+
+Comparison to other libraries
+=============================
+
+This space intentionally left blank.
+
+- Vue
+- Lit
+- JSX/Preact
+- Template parts
+
