@@ -1,7 +1,4 @@
-Conspiracy
-==========
-
-A templating/data binding library for cranks and weirdos. Intended to be a small, fast solution for building web components.
+Conspiracy is a templating/data binding library for cranks and weirdos. Intended to be a small, fast solution for building web components.
 
 * <3KB when minified and gzipped
 * Easy to understand and extend
