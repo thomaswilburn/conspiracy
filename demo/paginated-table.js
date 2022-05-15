@@ -63,7 +63,7 @@ class PaginatedTable extends ConspiracyElement {
       var query = searchbox.value.toLowerCase();
       rows = rows.filter(r => state.rowContents.get(r).includes(query));
     }
-    state.pages.length = rows.length ? (rows.length / this.pageSize + 1) | 0 : 0;
+    state.pages.length = Math.ceil(rows.length / this.pageSize);
     state.currentPage = pageselect.value;
     if (e && e.dispatchedFrom == searchbox) {
       state.currentPage = 0;
