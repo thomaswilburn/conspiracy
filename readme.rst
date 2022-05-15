@@ -162,6 +162,7 @@ Directives are (usually) attributes added to elements that indicate how they sho
 When a directive talks about a "keypath," it refers to a dot-separated list of properties used to look up a property on the data object passed to ``Conspiracy.update()``. For example, given the object:
 
 .. code:: javascript
+
   {
     a: {
       b: {
