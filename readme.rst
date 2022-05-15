@@ -80,7 +80,7 @@ Directives are (usually) attributes added to elements that indicate how they sho
 * ``namespace`` - defaults to an empty string, meaning that you can ignore it unless you set the corresponding option when creating your Conspiracy.
 * ``directiveName`` - the actual operation to perform. These are listed below.
 * ``args`` - an optional, dot-separated list of flags that can change how the directive works. For example, ``:if.not`` or ``:on.click.once``.
-* ``text`` - usually a key path to tell the directive where in the data it should look for updates, but can also be a more complex configuration string.
+* ``text`` - usually a keypath to tell the directive where in the data it should look for updates, but can also be a more complex configuration string.
 
 When a directive talks about a "keypath," it refers to a dot-separated list of properties used to look up a property on the data object passed to ``Conspiracy.update()``. For example, given the object:
 
@@ -103,12 +103,12 @@ Here are all the directives included with Conspiracy, their options, and how to 
 Inline text substitution
 ------------------------
 
-Values can be injected into inline text by marking the insertion point with an HTML comment. The comment should a "directive" attribute string that's just the key path of the value you want to insert (e.g., calling ``instance.update({ link: { text: "hello" } })`` would replace ``<!-- :link.text -->`` with the string "hello").
+Values can be injected into inline text by marking the insertion point with an HTML comment. The comment should a "directive" attribute string that's just the keypath of the value you want to insert (e.g., calling ``instance.update({ link: { text: "hello" } })`` would replace ``<!-- :link.text -->`` with the string "hello").
 
 ``:if``
 -------
 
-The attribute text should be a key path to a value. If the value is equivalent, the marked element will be removed from the DOM. 
+The attribute text should be a keypath to a value. If the value is equivalent, the marked element will be removed from the DOM. 
 
 * ``:if.not`` reverses this: the element will only exist in the DOM if the value is false, and will be removed if it is true.
 
