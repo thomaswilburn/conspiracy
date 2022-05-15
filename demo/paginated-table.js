@@ -57,7 +57,7 @@ class PaginatedTable extends ConspiracyElement {
     this.render();
   }
 
-  updatePagination(e = {}) {
+  updatePagination(e) {
     var { state, ui } = this;
     var { rows } = this.state;
     var { searchbox } = ui.elements;
@@ -66,7 +66,7 @@ class PaginatedTable extends ConspiracyElement {
       rows = rows.filter(r => state.rowContents.get(r).includes(query));
     }
     state.pages.length = Math.ceil(rows.length / this.pageSize);
-    if (e && e.dispatchedFrom && e.dispatchedFrom.tagName == "SELECT") {
+    if (e && e.dispatchedFrom.selectedOptions) {
       state.currentPage = Number(e.dispatchedFrom.value);
     }
     if (e && e.dispatchedFrom == searchbox) {
