@@ -25,7 +25,8 @@ class PaginatedTable extends ConspiracyElement {
   state = {
     pages: pageProxy,
     currentPage: 0,
-    rowContents: new Map()
+    rowContents: new Map(),
+    selectboxes: {}
   };
   pageSize = 10;
 
@@ -58,16 +59,19 @@ class PaginatedTable extends ConspiracyElement {
   updatePagination(e = {}) {
     var { state, ui } = this;
     var { rows } = this.state;
-    var { searchbox, pageselect } = ui.elements;
+    var { searchbox } = ui.elements;
     if (searchbox.value) {
       var query = searchbox.value.toLowerCase();
       rows = rows.filter(r => state.rowContents.get(r).includes(query));
     }
     state.pages.length = Math.ceil(rows.length / this.pageSize);
-    state.currentPage = pageselect.value;
+    if (e && e.dispatchedFrom && e.dispatchedFrom.tagName == "SELECT") {
+      state.currentPage = Number(e.dispatchedFrom.value);
+    }
     if (e && e.dispatchedFrom == searchbox) {
       state.currentPage = 0;
     }
+    state.selectboxes.selectedIndex = state.currentPage;
     var pageStart = state.currentPage * this.pageSize;
     var paginated = rows.slice(pageStart, pageStart + this.pageSize);
     var visible = new Set(paginated);
@@ -98,6 +102,10 @@ class PaginatedTable extends ConspiracyElement {
   justify-content: space-between;
   padding: 8px 0;
 }
+
+.controls.right {
+  justify-content: flex-end;
+}
 </style>
 <div class="controls">
   <div>
@@ -107,7 +115,7 @@ class PaginatedTable extends ConspiracyElement {
 
   <div>
     Page
-    <select :element="pageselect" :on.input.composed="tableuichange" :attr.selectedindex="state.currentPage">
+    <select :element="pageselect" :on.input.composed="tableuichange" :assign="state.selectboxes">
       <option :if.not="state.pages.length" disabled selected>0</option>
       <option :each="option of state.pages" :attr.value="option.data">
         <!-- :option.label -->
@@ -117,6 +125,18 @@ class PaginatedTable extends ConspiracyElement {
   </div>
 </div>
 <slot></slot>
+<div class="controls right">
+  <div>
+    Page
+    <select :element="pageselect" :on.input.composed="tableuichange" :assign="state.selectboxes">
+      <option :if.not="state.pages.length" disabled selected>0</option>
+      <option :each="option of state.pages" :attr.value="option.data">
+        <!-- :option.label -->
+      </option>
+    </select>
+    of <!-- :state.pages.length -->
+  </div>
+</div>
   `
 }
 
