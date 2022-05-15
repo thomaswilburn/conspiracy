@@ -1,9 +1,9 @@
 Conspiracy is a templating/data binding library for cranks and weirdos. It's a tool for building out web component frameworks.
 
-* <3KB when minified and gzipped
-* Easy to understand and extend
-* Plain templating language: no need to map() when you want to repeat an element
-* Selective updates: only changes the page where necessary, without a VDOM
+* **<3KB** when minified and gzipped
+* Easy to **understand and extend**
+* **Plain templating language**: no need to map() when you want to repeat an element
+* Selective updates: only changes the page where necessary, **no VDOM and no dirty checking**
 * Designed for the future of ES modules
 
 Theory
@@ -100,8 +100,8 @@ When a directive talks about a "keypath," it refers to a dot-separated list of p
 
 Here are all the directives included with Conspiracy, their options, and how to set their values.
 
-Inline text substitution
-------------------------
+``<!-- :text -->``
+------------------
 
 Values can be injected into inline text by marking the insertion point with an HTML comment. The comment should a "directive" attribute string that's just the keypath of the value you want to insert (e.g., calling ``instance.update({ link: { text: "hello" } })`` would replace ``<!-- :link.text -->`` with the string "hello").
 
@@ -243,12 +243,31 @@ The element can then be accessed on your Conspiracy instance as ``instance.eleme
 Comparison to other libraries
 =============================
 
-This space intentionally left blank.
+Vue
+---
 
-- Vue
-- Lit
-- JSX/Preact
-- Template parts
+Conspiracy is similar to Vue in that both of them share the concept of attribute-based directives based on a persistent data object. However, Conspiracy is not intrinsically reactive the way Vue is: you need to call ``update()`` and pass in a new object in order to re-render in Conspiracy, instead of simply setting a value on the model. This has advantages, in that you are directly in control of render scheduling, and disadvantages, in that you are directly in control of render scheduling.
+
+React/Preact
+------------
+
+Of all the frameworks, Conspiracy is least like React. This is unsurprising, since React is my least favorite of the large frameworks, but also because React culturally has always been about abstractions from the browser. For example, it has long used a synthetic event system instead of dispatching events through the DOM, a virtual DOM for computing changes, and it has moved toward functional components and Hooks instead of class-based components. 
+
+Essentially, React wants you to think about UI as the result of long, nested function evaluation, which will be reconciled with the actual DOM at arm's length. Web components, and Conspiracy by extension, have very little abstraction from the underlying platform. They are class-based and stateful. Although it would probably be possible to use Conspiracy and web components to build something that felt a little like React, it's not a natural transition.
+
+lit-html
+--------
+
+Conspiracy shares a lot of architectural DNA with lit-html: both of them use ``<template>`` to parse and interpolate their templates, and both handle selective updates through a similar data binding system. However, their API surface is extremely different: lit-html hews much more closely to a React-like ``render()`` function, and its templates are inextricably based on tagged template strings.
+
+lit-html is a good choice for a no-build template system, and it may be familiar for people who have experience with JSX. However, its reliance on functional expressions for features like iteration or event listeners can be difficult for beginners to understand. While Conspiracy also certainly has its share of conceptual quirks, I do think that its templating syntax is easier to grasp.
+
+Template parts
+--------------
+
+The `template parts <https://github.com/github/template-parts>`_ polyfill from GitHub is an interesting implementation of functionality that will hopefully soon be a standard part of browsers: being able to pass data to an HTML ``<template>`` and get back an interpolated chunk of DOM.
+
+While promising, template instantiation only handles half the necessary task for building a web app. Although it returns interpolated DOM, you still need to map that DOM to the existing structure, and apply changes. By providing data binding, Conspiracy is a more complete solution--for now, at least.
 
 Questions and lamentations
 ==========================
