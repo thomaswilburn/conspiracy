@@ -116,7 +116,7 @@ class PaginatedTable extends ConspiracyElement {
 
   <div>
     Page
-    <select :element="pageselect" :on.input.composed="tableuichange" :assign="state.selectboxes">
+    <select :on.input.composed="tableuichange" :assign="state.selectboxes">
       <option :if.not="state.pages.length" disabled selected>0</option>
       <option :each="option of state.pages" :attr.value="option.data">
         <!-- :option.label -->
@@ -131,7 +131,7 @@ class PaginatedTable extends ConspiracyElement {
 <div class="controls right">
   <div>
     Page
-    <select :element="pageselect" :on.input.composed="tableuichange" :assign="state.selectboxes">
+    <select :on.input.composed="tableuichange" :assign="state.selectboxes">
       <option :if.not="state.pages.length" disabled selected>0</option>
       <option :each="option of state.pages" :attr.value="option.data">
         <!-- :option.label -->
