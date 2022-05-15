@@ -25,6 +25,7 @@ class PaginatedTable extends ConspiracyElement {
   state = {
     pages: pageProxy,
     currentPage: 0,
+    rows: [],
     rowContents: new Map(),
     selectboxes: {}
   };
@@ -124,7 +125,9 @@ class PaginatedTable extends ConspiracyElement {
     of <!-- :state.pages.length -->
   </div>
 </div>
+
 <slot></slot>
+
 <div class="controls right">
   <div>
     Page
