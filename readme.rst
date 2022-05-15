@@ -6,6 +6,83 @@ Conspiracy is a templating/data binding library for cranks and weirdos. It's a t
 * Selective updates: only changes the page where necessary, **no VDOM and no dirty checking**
 * Designed for the future of ES modules
 
+Example code
+============
+
+.. code:: javascript
+
+    import { Conspiracy } from "./src/index.js";
+
+    var root = document.querySelector(".root");
+    // the template can be a string, or an actual <template> element
+    var template = `
+  <button
+    :on.click="clickedtestbutton"
+    :attr.aria-pressed="buttonState"
+  >
+    CLICK ME
+  </button>
+
+  <input :assign="mousecoords"></input>
+
+  <h1 :if.not="visible">TOGGLE BIG <!-- :nested.counter --></h1>
+  <h2 :if="visible">toggle small <!-- :nested.counter --></h2>
+
+  <div :on.mousemove="updatemousemove">
+    Hello <!-- :name -->
+    <ul>
+      <li>FIRST
+      <li :each="item, i of nested.items">
+        <!-- :prefix -->
+        <a :attr.href="item.url"><!-- :item.label --></a>
+      </li>
+      <li>LAST
+    </ul>
+  </div>
+    `;
+
+    var binding = new Conspiracy(template);
+
+    var data = {
+      name: "World",
+      get buttonState() {
+        return String(this._buttonState)
+      },
+      _buttonState: false,
+      mousecoords: {},
+      nested: {
+        counter: 0,
+        items: [
+          { url: "https://github.com/thomaswilburn/conspiracy", label: "Conspiracy" },
+          { url: "https://thomaswilburn.net", label: "Portfolio" }
+        ]
+      },
+    };
+
+    binding.attach(root, data);
+
+    // which the button is clicked, toggle the h1/h2 tags and add a list item
+    root.addEventListener("clickedtestbutton", e => {
+      console.log(`Got custom event: ${e.type}`);
+      data.visible = !data.visible;
+      data._buttonState = !data._buttonState;
+      data.nested.counter++;
+      data.nested.items.push({
+        url: "https://example.com",
+        label: `Dynamic item #${data.nested.items.length - 1}`
+      });
+      // re-render
+      binding.update(data);
+    });
+
+    // when the mouse moves over the container block, update the input value
+    root.addEventListener("updatemousemove", e => {
+      var moved = e.originalEvent;
+      var coords = [moved.clientX, moved.clientY].join();
+      data.mousecoords.value = coords;
+      binding.update(data);
+    });
+
 Theory
 ======
 
