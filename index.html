@@ -25,6 +25,16 @@
         margin-top: 0;
       }
 
+      h3 {
+        margin: 0;
+      }
+
+      cite {
+        font-size: 80%;
+        text-align: right;
+        display: block;
+      }
+
       var {
         font-family: monospace;
         font-style: italic;
@@ -107,6 +117,7 @@ export default class ConspiracyElement extends HTMLElement {
         The other mildly interesting technique is that although all controls trigger a <var>tableuichange</var> event, we do need to know if the user altered the search or the page select, since the former will reset the latter. To do this, we use the <var>dispatchedFrom</var> property of the event created by <var>:on.input.composed</var>, and check this against the element references created by <var>:element</var> directives on both form controls. It's a simple test, but it works.
 
       <div>
+        <h3>List of countries by avocado production</h3>
         <paginated-table pageSize=20>
           <table class="wikitable sortable static-row-numbers jquery-tablesorter">
             <thead>
@@ -1772,6 +1783,7 @@ export default class ConspiracyElement extends HTMLElement {
             </tbody>
           </table>
         </paginated-table>
+        <cite>Courtesy of Wikipedia</cite>
       </div>
     </main>
 
