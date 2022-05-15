@@ -230,7 +230,7 @@ Allows binding an event listener to a given element. The first parameter indicat
 
   <button :on.click="clickedbutton">Click me</button>
 
-In this code, clicking on the button will dispatch a "clickedbutton" event from the button, up through the DOM. To hand it, you add a listener for that custom event to your web component, like so:
+In this code, clicking on the button will dispatch a "clickedbutton" event from the button, up through the DOM. To handle it, you add a listener for that custom event to your web component, like so:
 
 .. code:: javascript
 
