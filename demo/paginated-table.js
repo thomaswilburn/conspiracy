@@ -2,8 +2,8 @@ import ConspiracyElement from "./conspiracy-element.js";
 
 var pageProxy = new Proxy([], {
   get(target, property) {
-    if (typeof property == "string" && property.match(/\d+/)) {
-      if (!target[property]) {
+    if (!target[property]) {
+      if (typeof property == "string" && property.match(/\d+/)) {
         var n = Number(property);
         target[property] = { data: n, label: n + 1 }
       }
@@ -117,7 +117,7 @@ class PaginatedTable extends ConspiracyElement {
   <div>
     Page
     <select :on.input.composed="tableuichange" :assign="state.selectboxes">
-      <option :if.not="state.pages.length" disabled selected>0</option>
+      <option :if.not="state.pages.length" disabled selected>-</option>
       <option :each="option of state.pages" :attr.value="option.data">
         <!-- :option.label -->
       </option>
@@ -132,7 +132,7 @@ class PaginatedTable extends ConspiracyElement {
   <div>
     Page
     <select :on.input.composed="tableuichange" :assign="state.selectboxes">
-      <option :if.not="state.pages.length" disabled selected>0</option>
+      <option :if.not="state.pages.length" disabled selected>-</option>
       <option :each="option of state.pages" :attr.value="option.data">
         <!-- :option.label -->
       </option>
