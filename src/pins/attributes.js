@@ -1,3 +1,23 @@
+
+var upcase = {};
+`
+preserveAspectRatio viewBox textContent baseFrequency
+baseProfile calcMode clipPathUnits contentScriptType
+contentStyleType diffuseConstant edgeMode filterRes
+filterUnits gradientTransform gradientUnits kernelMatrix
+kernelUnitLength keyPoints keySplines keyTimes 
+lengthAdjust limitingConeAngle maskContentUnits
+maskUnits numOctaves pathLength patternContentUnits
+patternTransform patternUnits pointsAtX pointsAtY
+pointsAtZ preserveAlpha primitiveUnits repeatCount
+repeatDur requiredFeatures refX refY specularConstant
+specularExponent spreadMethod startOffset stdDeviation
+stitchTiles surfaceScale systemLanguage tableValues
+targetX targetY textLength viewTarget xChannelSelector
+yChannelSelector zoomAndPan
+`.trim().split(/\s+/)
+  .forEach(a => upcase[a.toLowerCase()] = a);
+
 /*
 
 :attributes="attributeObject"
@@ -24,6 +44,7 @@ export class AttributesPin {
     for (var k in params) {
       var v = params[k];
       if (this.previous[k] == v) continue;
+      if (k in upcase) k = upcase[k];
       if (typeof v == "undefined" || v == null) {
         this.target.removeAttribute(k);
       } else if (typeof v == "boolean") {
@@ -37,9 +58,9 @@ export class AttributesPin {
 }
 
 /*
-  Single attribute setter. Usable only for lower-case attributes at this time.
-  TODO: add support for upcase using the code from Kudzu.
+  Single attribute setter.
 */
+
 
 export class AttrPin {
   static name = "attr";
@@ -50,7 +71,7 @@ export class AttrPin {
 
   attach(original, node, args, value) {
     var [ attr ] = args;
-    this.attributeName = attr;
+    this.attributeName = attr in upcase ? upcase[attr] : attr;
     this.target = node;
     this.path = value.split(".");
     return node;
