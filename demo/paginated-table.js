@@ -7,7 +7,7 @@ var pageProxy = new Proxy([], {
         var n = Number(property);
         target[property] = {
           data: n,
-          label: `Page #${n + 1}`
+          label: n + 1
         }
       }
     }
@@ -35,7 +35,7 @@ class PaginatedTable extends ConspiracyElement {
     this.table = this.querySelector("table");
     if (!this.table) {
       this.state.rows = [];
-      this.state.state.pages.length = 0;
+      this.state.pages.length = 0;
       this.render();
       return;
     }
@@ -44,10 +44,9 @@ class PaginatedTable extends ConspiracyElement {
     for (var row of rows) {
       this.state.rowContents.set(row, row.innerText.toLowerCase());
     }
-    this.state.pages.length = (rows.length / this.pageSize) | 0;
-    this.render();
     this.ui.elements.searchbox.value = "";
     this.updatePagination();
+    this.render();
   }
 
   updatePagination(e = {}) {
@@ -60,10 +59,8 @@ class PaginatedTable extends ConspiracyElement {
     }
     state.pages.length = (rows.length / this.pageSize + 1) | 0;
     state.currentPage = pageselect.value;
-    if (e) {
-      if (e.dispatchedFrom == searchbox) {
-        state.currentPage = 0;
-      }
+    if (e && e.dispatchedFrom == searchbox) {
+      state.currentPage = 0;
     }
     var pageStart = state.currentPage * this.pageSize;
     var paginated = rows.slice(pageStart, pageStart + this.pageSize);
@@ -74,16 +71,43 @@ class PaginatedTable extends ConspiracyElement {
     this.render();
   }
 
-  static template = `
-<div class="controls">
-  <label for="table-search">Search</label>
-  <input :element="searchbox" :on.input.composed="tableuichange" id="table-search">
+  static observedAttributes = ["pagesize"];
+  attributeChangedCallback(attr, was, value) {
+    this.pageSize = Number(value) || 10;
+    this.updatePagination();
+  }
 
-  <select :element="pageselect" :on.input.composed="tableuichange" :attr.selectedindex="state.currentPage">
-    <option :each="option of state.pages" :attr.value="option.data">
-      <!-- :option.label -->
-    </option>
-  </select>
+  static template = `
+<style>
+:host {
+  display: block;
+}
+
+:host[hidden] {
+  display: none;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+</style>
+<div class="controls">
+  <div>
+    <label for="table-search">Search</label>
+    <input :element="searchbox" :on.input.composed="tableuichange" id="table-search">
+  </div>
+
+  <div>
+    Page
+    <select :element="pageselect" :on.input.composed="tableuichange" :attr.selectedindex="state.currentPage">
+      <option :each="option of state.pages" :attr.value="option.data">
+        <!-- :option.label -->
+      </option>
+    </select>
+    of <!-- :state.pages.length -->
+  </div>
 </div>
 <slot></slot>
   `

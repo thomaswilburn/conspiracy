@@ -145,7 +145,7 @@ After a Conspiracy instance is attached, you can re-render with changes by calli
 
 You don't have to call ``update()`` with the same data object--it could be a completely new object with the same structure and some changed values. However, some directives (such as ``:each``) rely on object identity to minimize DOM updates, and may re-render more than expected if references are different from the previous update.
 
-For more details on how Conspiracy renders and how to extend it, see `the source code README <https://github.com/thomaswilburn/conspiracy/blob/main/src/readme.rst>`_.
+For more details on how Conspiracy renders and how to extend it, see `the source code README <https://github.com/thomaswilburn/conspiracy/blob/main/src/readme.rst>`_. For a demo of a custom elements that use Conspiracy for rendering, see `this page <https://thomaswilburn.github.io/conspiracy/>`_.
 
 Directory of directives
 =======================
