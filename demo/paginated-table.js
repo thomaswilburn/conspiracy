@@ -2,18 +2,24 @@ import ConspiracyElement from "./conspiracy-element.js";
 
 var pageProxy = new Proxy([], {
   get(target, property) {
-    if (property.match(/\d+/)) {
+    if (typeof property == "string" && property.match(/\d+/)) {
       if (!target[property]) {
         var n = Number(property);
-        target[property] = {
-          data: n,
-          label: n + 1
-        }
+        target[property] = { data: n, label: n + 1 }
       }
     }
     return target[property];
   }
 });
+
+// pageProxy.length = 3;
+// console.log([...pageProxy]);
+/* [
+  { "data": 0, "label": 1 },
+  { "data": 1, "label": 2 },
+  { "data": 2, "label": 3 }
+] */
+
 
 class PaginatedTable extends ConspiracyElement {
   state = {
@@ -57,7 +63,7 @@ class PaginatedTable extends ConspiracyElement {
       var query = searchbox.value.toLowerCase();
       rows = rows.filter(r => state.rowContents.get(r).includes(query));
     }
-    state.pages.length = (rows.length / this.pageSize + 1) | 0;
+    state.pages.length = rows.length ? (rows.length / this.pageSize + 1) | 0 : 0;
     state.currentPage = pageselect.value;
     if (e && e.dispatchedFrom == searchbox) {
       state.currentPage = 0;
@@ -102,6 +108,7 @@ class PaginatedTable extends ConspiracyElement {
   <div>
     Page
     <select :element="pageselect" :on.input.composed="tableuichange" :attr.selectedindex="state.currentPage">
+      <option :if.not="state.pages.length" disabled selected>0</option>
       <option :each="option of state.pages" :attr.value="option.data">
         <!-- :option.label -->
       </option>
