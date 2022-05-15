@@ -12,9 +12,10 @@ TODO: add a way to specify the event name in the attribute for uppercased events
 */
 
 class WrappedEvent extends Event {
-  constructor(type, original, options = {}) {
+  constructor(type, from, original, options = {}) {
     super(type, { bubbles: true, ...options });
     this.originalEvent = original;
+    this.dispatchedFrom = from;
   }
 }
 
@@ -27,7 +28,7 @@ export class EventPin {
     var once = args.includes("once");
     var bubbles = true;
     var listener = function(original) {
-      var e = new WrappedEvent(custom, original, { composed });
+      var e = new WrappedEvent(custom, this, original, { composed });
       element.dispatchEvent(e);
     };
     element.addEventListener(event, listener, { once });

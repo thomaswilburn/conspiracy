@@ -236,7 +236,7 @@ In this code, clicking on the button will dispatch a "clickedbutton" event from 
 
   this.addEventListener("clickedbutton", this.clickedButtonHandler);
 
-The custom event will have the original event as its ``originalEvent`` property, in case you need to access data (such as mouse position).
+The custom event will have the original event as its ``originalEvent`` property, in case you need to access data (such as mouse position). The original event target will also be available as ``dispatchedFrom``.
 
 This is perhaps the greatest difference between Conspiracy and other rendering frameworks, where you would typically provide the listener function directly to the template. However, handling events this way has a few advantages:
 

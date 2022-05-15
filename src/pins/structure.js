@@ -79,7 +79,7 @@ export class EachPin {
     return { itemName, indexName, keyName, path };
   }
 
-  update(collection, scope) {
+  update(collection = [], scope = {}) {
     // create the scope object for templating
     var itemData = Object.create(scope);
     var { itemName, indexName } = this.config;

@@ -5,123 +5,434 @@
   <title>Conspiracy</title>
 </head>
 <body>
-  <div class="root"></div>
 
-  <template>
-    <button
-      placeholder="true"
-      :on.click="clickedtestbutton"
-      :on.click.once="clickedonceonly"
-      :attributes="button"
-      :styles="buttonStyles"
-      :dataset="buttonData"
-    >TEST</button>
-    <input :assign="inputProps"></input>
-    <div :element="hello" :on.mousemove="hellomoved" class="container unwanted" :classes="containerClass">
-      Hello <!-- :name --> <!-- :coords -->
-      <ul>
-        <li>FIRST
-        <li :each="item, i of nested.items">
-          <!-- :name -->
-          <a :attr.href="item.url"><!-- :item.label --></a>
-          <!-- :item.data -->
-        </li>
-        <li>LAST
-      </ul>
-    </div>
-    <h1 :if.not="visible">TOGGLE ME <!-- :nested.counter --></h1>
-    <h2 :if="visible">I'm different! <!-- :nested.counter --></h2>
-    <ul>
-      <li :each="value, key of button">
-        <!-- :key -->: <!-- :value -->
-    </ul>
-    <ul>
-      <li :each="key, value of mapTest">
-        <!-- :key.text --> -> <!-- :value.text -->
-    </ul>
-  </template>
+  <paginated-table>
+    <table class="wikitable sortable static-row-numbers jquery-tablesorter">
 
-  <script type="module">
-    import { Conspiracy } from "./src/index.js";
+    <thead><tr bgcolor="#ececec">
+    <th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending">Country/region</th>
+    <th data-sort-type="number" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending">2018</th>
+    <th data-sort-type="number" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending">2017</th>
+    <th data-sort-type="number" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending">2016
+    </th></tr></thead><tbody>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Mexico.svg/23px-Flag_of_Mexico.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Mexico.svg/35px-Flag_of_Mexico.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Mexico.svg/46px-Flag_of_Mexico.svg.png 2x" data-file-width="980" data-file-height="560" width="23" height="13">&nbsp;</span><a href="/wiki/Mexico" title="Mexico">Mexico</a></td>
+    <td align="left">2,184,663</td>
+    <td align="left">2,029,886</td>
+    <td align="left">1,889,354
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_the_Dominican_Republic.svg/23px-Flag_of_the_Dominican_Republic.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_the_Dominican_Republic.svg/35px-Flag_of_the_Dominican_Republic.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_the_Dominican_Republic.svg/45px-Flag_of_the_Dominican_Republic.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Dominican_Republic" title="Dominican Republic">Dominican Republic</a></td>
+    <td align="left">644,306</td>
+    <td align="left">637,688</td>
+    <td align="left">601,349
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Flag_of_Peru.svg/23px-Flag_of_Peru.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Flag_of_Peru.svg/35px-Flag_of_Peru.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Flag_of_Peru.svg/45px-Flag_of_Peru.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Peru" title="Peru">Peru</a></td>
+    <td align="left">504,517</td>
+    <td align="left">466,796</td>
+    <td align="left">455,394
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Indonesia.svg/23px-Flag_of_Indonesia.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Indonesia.svg/35px-Flag_of_Indonesia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Indonesia.svg/45px-Flag_of_Indonesia.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Indonesia" title="Indonesia">Indonesia</a></td>
+    <td align="left">410,094</td>
+    <td align="left">363,157</td>
+    <td align="left">304,938
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Colombia.svg/23px-Flag_of_Colombia.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Colombia.svg/35px-Flag_of_Colombia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Colombia.svg/45px-Flag_of_Colombia.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Colombia" title="Colombia">Colombia</a></td>
+    <td align="left">326,666</td>
+    <td align="left">308,166</td>
+    <td align="left">294,389
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/en/thumb/0/05/Flag_of_Brazil.svg/22px-Flag_of_Brazil.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/0/05/Flag_of_Brazil.svg/33px-Flag_of_Brazil.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/0/05/Flag_of_Brazil.svg/43px-Flag_of_Brazil.svg.png 2x" data-file-width="720" data-file-height="504" width="22" height="15">&nbsp;</span><a href="/wiki/Brazil" title="Brazil">Brazil</a></td>
+    <td align="left">235,788</td>
+    <td align="left">212,873</td>
+    <td align="left">196,545
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/49/Flag_of_Kenya.svg/23px-Flag_of_Kenya.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/49/Flag_of_Kenya.svg/35px-Flag_of_Kenya.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/49/Flag_of_Kenya.svg/45px-Flag_of_Kenya.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Kenya" title="Kenya">Kenya</a></td>
+    <td align="left">233,933</td>
+    <td align="left">217,688</td>
+    <td align="left">176,045
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/23px-Flag_of_the_United_States.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/35px-Flag_of_the_United_States.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/46px-Flag_of_the_United_States.svg.png 2x" data-file-width="1235" data-file-height="650" width="23" height="12">&nbsp;</span><a href="/wiki/United_States" title="United States">United States</a></td>
+    <td align="left">168,528</td>
+    <td align="left">170,261</td>
+    <td align="left">125,237
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/06/Flag_of_Venezuela.svg/23px-Flag_of_Venezuela.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/06/Flag_of_Venezuela.svg/35px-Flag_of_Venezuela.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/06/Flag_of_Venezuela.svg/45px-Flag_of_Venezuela.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Venezuela" title="Venezuela">Venezuela</a></td>
+    <td align="left">139,685</td>
+    <td align="left">133,453</td>
+    <td align="left">130,290
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/21px-Flag_of_Israel.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/32px-Flag_of_Israel.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Israel.svg/41px-Flag_of_Israel.svg.png 2x" data-file-width="1100" data-file-height="800" width="21" height="15">&nbsp;</span><a href="/wiki/Israel" title="Israel">Israel</a></td>
+    <td align="left">131,720</td>
+    <td align="left">110,000</td>
+    <td align="left">101,500
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/23px-Flag_of_the_People%27s_Republic_of_China.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/35px-Flag_of_the_People%27s_Republic_of_China.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/45px-Flag_of_the_People%27s_Republic_of_China.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/China" title="China">China</a></td>
+    <td align="left">128,743</td>
+    <td align="left">126,103</td>
+    <td align="left">124,863
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/af/Flag_of_South_Africa.svg/23px-Flag_of_South_Africa.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/a/af/Flag_of_South_Africa.svg/35px-Flag_of_South_Africa.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/a/af/Flag_of_South_Africa.svg/45px-Flag_of_South_Africa.svg.png 2x" data-file-width="400" data-file-height="267" width="23" height="15">&nbsp;</span><a href="/wiki/South_Africa" title="South Africa">South Africa</a></td>
+    <td align="left">127,568</td>
+    <td align="left">63,045</td>
+    <td align="left">89,546
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Flag_of_Guatemala.svg/23px-Flag_of_Guatemala.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Flag_of_Guatemala.svg/35px-Flag_of_Guatemala.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Flag_of_Guatemala.svg/46px-Flag_of_Guatemala.svg.png 2x" data-file-width="960" data-file-height="600" width="23" height="14">&nbsp;</span><a href="/wiki/Guatemala" title="Guatemala">Guatemala</a></td>
+    <td align="left">124,931</td>
+    <td align="left">127,480</td>
+    <td align="left">122,184
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/7/78/Flag_of_Chile.svg/23px-Flag_of_Chile.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/7/78/Flag_of_Chile.svg/35px-Flag_of_Chile.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/7/78/Flag_of_Chile.svg/45px-Flag_of_Chile.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Chile" title="Chile">Chile</a></td>
+    <td align="left">124,506</td>
+    <td align="left">131,950</td>
+    <td align="left">139,013
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Flag_of_Malawi.svg/23px-Flag_of_Malawi.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Flag_of_Malawi.svg/35px-Flag_of_Malawi.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Flag_of_Malawi.svg/45px-Flag_of_Malawi.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Malawi" title="Malawi">Malawi</a></td>
+    <td align="left">92,239</td>
+    <td align="left">97,358</td>
+    <td align="left">86,769
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/56/Flag_of_Haiti.svg/23px-Flag_of_Haiti.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/56/Flag_of_Haiti.svg/35px-Flag_of_Haiti.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/56/Flag_of_Haiti.svg/46px-Flag_of_Haiti.svg.png 2x" data-file-width="1000" data-file-height="600" width="23" height="14">&nbsp;</span><a href="/wiki/Haiti" title="Haiti">Haiti</a></td>
+    <td align="left">90,699</td>
+    <td align="left">92,294</td>
+    <td align="left">91,284
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/en/thumb/9/9a/Flag_of_Spain.svg/23px-Flag_of_Spain.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/9/9a/Flag_of_Spain.svg/35px-Flag_of_Spain.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/9/9a/Flag_of_Spain.svg/45px-Flag_of_Spain.svg.png 2x" data-file-width="750" data-file-height="500" width="23" height="15">&nbsp;</span><a href="/wiki/Spain" title="Spain">Spain</a></td>
+    <td align="left">89,592</td>
+    <td align="left">92,936</td>
+    <td align="left">91,509
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Flag_of_Cameroon.svg/23px-Flag_of_Cameroon.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Flag_of_Cameroon.svg/35px-Flag_of_Cameroon.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Flag_of_Cameroon.svg/45px-Flag_of_Cameroon.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Cameroon" title="Cameroon">Cameroon</a></td>
+    <td align="left">75,221</td>
+    <td align="left">74,363</td>
+    <td align="left">73,479
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Flag_of_the_Democratic_Republic_of_the_Congo.svg/20px-Flag_of_the_Democratic_Republic_of_the_Congo.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Flag_of_the_Democratic_Republic_of_the_Congo.svg/31px-Flag_of_the_Democratic_Republic_of_the_Congo.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Flag_of_the_Democratic_Republic_of_the_Congo.svg/40px-Flag_of_the_Democratic_Republic_of_the_Congo.svg.png 2x" data-file-width="800" data-file-height="600" width="20" height="15">&nbsp;</span><a href="/wiki/Democratic_Republic_of_the_Congo" title="Democratic Republic of the Congo">Democratic Republic of the Congo</a></td>
+    <td align="left">65,773</td>
+    <td align="left">65,744</td>
+    <td align="left">65,715
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/88/Flag_of_Australia_%28converted%29.svg/23px-Flag_of_Australia_%28converted%29.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/88/Flag_of_Australia_%28converted%29.svg/35px-Flag_of_Australia_%28converted%29.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/8/88/Flag_of_Australia_%28converted%29.svg/46px-Flag_of_Australia_%28converted%29.svg.png 2x" data-file-width="1280" data-file-height="640" width="23" height="12">&nbsp;</span><a href="/wiki/Australia" title="Australia">Australia</a></td>
+    <td align="left">63,486</td>
+    <td align="left">56,501</td>
+    <td align="left">67,600
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/7/71/Flag_of_Ethiopia.svg/23px-Flag_of_Ethiopia.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/7/71/Flag_of_Ethiopia.svg/35px-Flag_of_Ethiopia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/7/71/Flag_of_Ethiopia.svg/46px-Flag_of_Ethiopia.svg.png 2x" data-file-width="1200" data-file-height="600" width="23" height="12">&nbsp;</span><a href="/wiki/Ethiopia" title="Ethiopia">Ethiopia</a></td>
+    <td align="left">52,389</td>
+    <td align="left">57,351</td>
+    <td align="left">64,982
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Flag_of_Morocco.svg/23px-Flag_of_Morocco.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Flag_of_Morocco.svg/35px-Flag_of_Morocco.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Flag_of_Morocco.svg/45px-Flag_of_Morocco.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Morocco" title="Morocco">Morocco</a></td>
+    <td align="left">51,170</td>
+    <td align="left">41,695</td>
+    <td align="left">42,256
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/23px-Flag_of_Sri_Lanka.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/35px-Flag_of_Sri_Lanka.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/46px-Flag_of_Sri_Lanka.svg.png 2x" data-file-width="1200" data-file-height="600" width="23" height="12">&nbsp;</span><a href="/wiki/Sri_Lanka" title="Sri Lanka">Sri Lanka</a></td>
+    <td align="left">50,542</td>
+    <td align="left">30,606</td>
+    <td align="left">34,781
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_C%C3%B4te_d%27Ivoire.svg/23px-Flag_of_C%C3%B4te_d%27Ivoire.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_C%C3%B4te_d%27Ivoire.svg/35px-Flag_of_C%C3%B4te_d%27Ivoire.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_C%C3%B4te_d%27Ivoire.svg/45px-Flag_of_C%C3%B4te_d%27Ivoire.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Ivory_Coast" title="Ivory Coast">Ivory Coast</a></td>
+    <td align="left">37,983</td>
+    <td align="left">37,119</td>
+    <td align="left">36,255
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Madagascar.svg/23px-Flag_of_Madagascar.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Madagascar.svg/35px-Flag_of_Madagascar.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Madagascar.svg/45px-Flag_of_Madagascar.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Madagascar" title="Madagascar">Madagascar</a></td>
+    <td align="left">26,777</td>
+    <td align="left">26,596</td>
+    <td align="left">26,413
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Flag_of_New_Zealand.svg/23px-Flag_of_New_Zealand.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Flag_of_New_Zealand.svg/35px-Flag_of_New_Zealand.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Flag_of_New_Zealand.svg/46px-Flag_of_New_Zealand.svg.png 2x" data-file-width="1200" data-file-height="600" width="23" height="12">&nbsp;</span><a href="/wiki/New_Zealand" title="New Zealand">New Zealand</a></td>
+    <td align="left">25,525</td>
+    <td align="left">22,903</td>
+    <td align="left">24,369
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/23px-Flag_of_the_Philippines.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/35px-Flag_of_the_Philippines.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_the_Philippines.svg/46px-Flag_of_the_Philippines.svg.png 2x" data-file-width="1200" data-file-height="600" width="23" height="12">&nbsp;</span><a href="/wiki/Philippines" title="Philippines">Philippines</a></td>
+    <td align="left">19,443</td>
+    <td align="left">19,440</td>
+    <td align="left">19,572
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/34/Flag_of_El_Salvador.svg/23px-Flag_of_El_Salvador.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/34/Flag_of_El_Salvador.svg/35px-Flag_of_El_Salvador.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/3/34/Flag_of_El_Salvador.svg/46px-Flag_of_El_Salvador.svg.png 2x" data-file-width="1005" data-file-height="567" width="23" height="13">&nbsp;</span><a href="/wiki/El_Salvador" title="El Salvador">El Salvador</a></td>
+    <td align="left">18,605</td>
+    <td align="left">36,088</td>
+    <td align="left">10,537
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Flag_of_Ecuador.svg/23px-Flag_of_Ecuador.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Flag_of_Ecuador.svg/35px-Flag_of_Ecuador.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Flag_of_Ecuador.svg/45px-Flag_of_Ecuador.svg.png 2x" data-file-width="1440" data-file-height="960" width="23" height="15">&nbsp;</span><a href="/wiki/Ecuador" title="Ecuador">Ecuador</a></td>
+    <td align="left">18,232</td>
+    <td align="left">20,995</td>
+    <td align="left">16,118
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Paraguay.svg/23px-Flag_of_Paraguay.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Paraguay.svg/35px-Flag_of_Paraguay.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Paraguay.svg/46px-Flag_of_Paraguay.svg.png 2x" data-file-width="1200" data-file-height="660" width="23" height="13">&nbsp;</span><a href="/wiki/Paraguay" title="Paraguay">Paraguay</a></td>
+    <td align="left">15,882</td>
+    <td align="left">15,803</td>
+    <td align="left">15,765
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Flag_of_Costa_Rica.svg/23px-Flag_of_Costa_Rica.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Flag_of_Costa_Rica.svg/35px-Flag_of_Costa_Rica.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Flag_of_Costa_Rica.svg/46px-Flag_of_Costa_Rica.svg.png 2x" data-file-width="1000" data-file-height="600" width="23" height="14">&nbsp;</span><a href="/wiki/Costa_Rica" title="Costa Rica">Costa Rica</a></td>
+    <td align="left">15,000</td>
+    <td align="left">12,368</td>
+    <td align="left">12,368
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Bandera_de_Bolivia_%28Estado%29.svg/22px-Bandera_de_Bolivia_%28Estado%29.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Bandera_de_Bolivia_%28Estado%29.svg/34px-Bandera_de_Bolivia_%28Estado%29.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Bandera_de_Bolivia_%28Estado%29.svg/44px-Bandera_de_Bolivia_%28Estado%29.svg.png 2x" data-file-width="1100" data-file-height="750" width="22" height="15">&nbsp;</span><a href="/wiki/Bolivia" title="Bolivia">Bolivia</a></td>
+    <td align="left">12,452</td>
+    <td align="left">12,509</td>
+    <td align="left">12,497
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/92/Flag_of_the_Republic_of_the_Congo.svg/23px-Flag_of_the_Republic_of_the_Congo.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/92/Flag_of_the_Republic_of_the_Congo.svg/35px-Flag_of_the_Republic_of_the_Congo.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/92/Flag_of_the_Republic_of_the_Congo.svg/45px-Flag_of_the_Republic_of_the_Congo.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Republic_of_the_Congo" title="Republic of the Congo">Republic of the Congo</a></td>
+    <td align="left">10,031</td>
+    <td align="left">9,782</td>
+    <td align="left">9,533
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/1/19/Flag_of_Ghana.svg/23px-Flag_of_Ghana.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/1/19/Flag_of_Ghana.svg/35px-Flag_of_Ghana.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/1/19/Flag_of_Ghana.svg/45px-Flag_of_Ghana.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Ghana" title="Ghana">Ghana</a></td>
+    <td align="left">9,385</td>
+    <td align="left">9,253</td>
+    <td align="left">9,109
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/59/Flag_of_Lebanon.svg/23px-Flag_of_Lebanon.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/59/Flag_of_Lebanon.svg/35px-Flag_of_Lebanon.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/59/Flag_of_Lebanon.svg/45px-Flag_of_Lebanon.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Lebanon" title="Lebanon">Lebanon</a></td>
+    <td align="left">9,383</td>
+    <td align="left">9,124</td>
+    <td align="left">8,988
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Flag_of_Panama.svg/23px-Flag_of_Panama.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Flag_of_Panama.svg/35px-Flag_of_Panama.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Flag_of_Panama.svg/45px-Flag_of_Panama.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Panama" title="Panama">Panama</a></td>
+    <td align="left">8,834</td>
+    <td align="left">8,276</td>
+    <td align="left">8,195
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_Guyana.svg/23px-Flag_of_Guyana.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_Guyana.svg/35px-Flag_of_Guyana.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/99/Flag_of_Guyana.svg/46px-Flag_of_Guyana.svg.png 2x" data-file-width="1000" data-file-height="600" width="23" height="14">&nbsp;</span><a href="/wiki/Guyana" title="Guyana">Guyana</a></td>
+    <td align="left">8,586</td>
+    <td align="left">5,874</td>
+    <td align="left">1,383
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/1/17/Flag_of_Rwanda.svg/23px-Flag_of_Rwanda.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/1/17/Flag_of_Rwanda.svg/35px-Flag_of_Rwanda.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/1/17/Flag_of_Rwanda.svg/45px-Flag_of_Rwanda.svg.png 2x" data-file-width="1080" data-file-height="720" width="23" height="15">&nbsp;</span><a href="/wiki/Rwanda" title="Rwanda">Rwanda</a></td>
+    <td align="left">8,238</td>
+    <td align="left">6,912</td>
+    <td align="left">9,296
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Flag_of_the_Central_African_Republic.svg/23px-Flag_of_the_Central_African_Republic.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Flag_of_the_Central_African_Republic.svg/35px-Flag_of_the_Central_African_Republic.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Flag_of_the_Central_African_Republic.svg/45px-Flag_of_the_Central_African_Republic.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Central_African_Republic" title="Central African Republic">Central African Republic</a></td>
+    <td align="left">7,511</td>
+    <td align="left">7,133</td>
+    <td align="left">8,800
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/26/Flag_of_East_Timor.svg/23px-Flag_of_East_Timor.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/26/Flag_of_East_Timor.svg/35px-Flag_of_East_Timor.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/26/Flag_of_East_Timor.svg/46px-Flag_of_East_Timor.svg.png 2x" data-file-width="1200" data-file-height="600" width="23" height="12">&nbsp;</span><a href="/wiki/East_Timor" title="East Timor">East Timor</a></td>
+    <td align="left">4,831</td>
+    <td align="left">4,688</td>
+    <td align="left">4,545
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Flag_of_Argentina.svg/23px-Flag_of_Argentina.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Flag_of_Argentina.svg/35px-Flag_of_Argentina.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Flag_of_Argentina.svg/46px-Flag_of_Argentina.svg.png 2x" data-file-width="800" data-file-height="500" width="23" height="14">&nbsp;</span><a href="/wiki/Argentina" title="Argentina">Argentina</a></td>
+    <td align="left">4,154</td>
+    <td align="left">4,125</td>
+    <td align="left">4,095
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Flag_of_Turkey.svg/23px-Flag_of_Turkey.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Flag_of_Turkey.svg/35px-Flag_of_Turkey.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Flag_of_Turkey.svg/45px-Flag_of_Turkey.svg.png 2x" data-file-width="1200" data-file-height="800" width="23" height="15">&nbsp;</span><a href="/wiki/Turkey" title="Turkey">Turkey</a></td>
+    <td align="left">3,164</td>
+    <td align="left">2,765</td>
+    <td align="left">1,950
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Flag_of_Cuba.svg/23px-Flag_of_Cuba.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Flag_of_Cuba.svg/35px-Flag_of_Cuba.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Flag_of_Cuba.svg/46px-Flag_of_Cuba.svg.png 2x" data-file-width="1200" data-file-height="600" width="23" height="12">&nbsp;</span><a href="/wiki/Cuba" title="Cuba">Cuba</a></td>
+    <td align="left">2,819</td>
+    <td align="left">2,986</td>
+    <td align="left">3,183
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/35px-Flag_of_France.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/45px-Flag_of_France.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/France" title="France">France</a></td>
+    <td align="left">2,518</td>
+    <td align="left">2,568</td>
+    <td align="left">1,926
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_Jamaica.svg/23px-Flag_of_Jamaica.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_Jamaica.svg/35px-Flag_of_Jamaica.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_Jamaica.svg/46px-Flag_of_Jamaica.svg.png 2x" data-file-width="1200" data-file-height="600" width="23" height="12">&nbsp;</span><a href="/wiki/Jamaica" title="Jamaica">Jamaica</a></td>
+    <td align="left">2,349</td>
+    <td align="left">2,395</td>
+    <td align="left">2,448
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Flag_of_Zimbabwe.svg/23px-Flag_of_Zimbabwe.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Flag_of_Zimbabwe.svg/35px-Flag_of_Zimbabwe.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Flag_of_Zimbabwe.svg/46px-Flag_of_Zimbabwe.svg.png 2x" data-file-width="1260" data-file-height="630" width="23" height="12">&nbsp;</span><a href="/wiki/Zimbabwe" title="Zimbabwe">Zimbabwe</a></td>
+    <td align="left">1,766</td>
+    <td align="left">1,633</td>
+    <td align="left">1,800
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Greece.svg/23px-Flag_of_Greece.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Greece.svg/35px-Flag_of_Greece.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Greece.svg/45px-Flag_of_Greece.svg.png 2x" data-file-width="600" data-file-height="400" width="23" height="15">&nbsp;</span><a href="/wiki/Greece" title="Greece">Greece</a></td>
+    <td align="left">1,640</td>
+    <td align="left">1,756</td>
+    <td align="left">1,731
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/82/Flag_of_Honduras.svg/23px-Flag_of_Honduras.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/82/Flag_of_Honduras.svg/35px-Flag_of_Honduras.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/8/82/Flag_of_Honduras.svg/46px-Flag_of_Honduras.svg.png 2x" data-file-width="1200" data-file-height="600" width="23" height="12">&nbsp;</span><a href="/wiki/Honduras" title="Honduras">Honduras</a></td>
+    <td align="left">1,618</td>
+    <td align="left">1,847</td>
+    <td align="left">2,960
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Grenada.svg/23px-Flag_of_Grenada.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Grenada.svg/35px-Flag_of_Grenada.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Grenada.svg/46px-Flag_of_Grenada.svg.png 2x" data-file-width="1000" data-file-height="600" width="23" height="14">&nbsp;</span><a href="/wiki/Grenada" title="Grenada">Grenada</a></td>
+    <td align="left">1,549</td>
+    <td align="left">1,550</td>
+    <td align="left">1,551
+    </td></tr>
+    <tr>
+    <td><i><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/35px-Flag_of_France.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/45px-Flag_of_France.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/French_Guiana" title="French Guiana">French Guiana</a></i></td>
+    <td align="left">1,491</td>
+    <td align="left">900</td>
+    <td align="left">900
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/93/Flag_of_the_Bahamas.svg/23px-Flag_of_the_Bahamas.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/93/Flag_of_the_Bahamas.svg/35px-Flag_of_the_Bahamas.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/93/Flag_of_the_Bahamas.svg/46px-Flag_of_the_Bahamas.svg.png 2x" data-file-width="1200" data-file-height="600" width="23" height="12">&nbsp;</span><a href="/wiki/The_Bahamas" title="The Bahamas">Bahamas</a></td>
+    <td align="left">1,396</td>
+    <td align="left">1,371</td>
+    <td align="left">1,345
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/31/Flag_of_Samoa.svg/23px-Flag_of_Samoa.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/31/Flag_of_Samoa.svg/35px-Flag_of_Samoa.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/3/31/Flag_of_Samoa.svg/46px-Flag_of_Samoa.svg.png 2x" data-file-width="2880" data-file-height="1440" width="23" height="12">&nbsp;</span><a href="/wiki/Samoa" title="Samoa">Samoa</a></td>
+    <td align="left">1,368</td>
+    <td align="left">1,350</td>
+    <td align="left">1,331
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Flag_of_Bosnia_and_Herzegovina.svg/23px-Flag_of_Bosnia_and_Herzegovina.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Flag_of_Bosnia_and_Herzegovina.svg/35px-Flag_of_Bosnia_and_Herzegovina.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Flag_of_Bosnia_and_Herzegovina.svg/46px-Flag_of_Bosnia_and_Herzegovina.svg.png 2x" data-file-width="800" data-file-height="400" width="23" height="12">&nbsp;</span><a href="/wiki/Bosnia_and_Herzegovina" title="Bosnia and Herzegovina">Bosnia and Herzegovina</a></td>
+    <td align="left">1,051</td>
+    <td align="left">1,051</td>
+    <td align="left">1,049
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Flag_of_Eswatini.svg/23px-Flag_of_Eswatini.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Flag_of_Eswatini.svg/35px-Flag_of_Eswatini.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Flag_of_Eswatini.svg/45px-Flag_of_Eswatini.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Eswatini" title="Eswatini">Swaziland</a></td>
+    <td align="left">954</td>
+    <td align="left">927</td>
+    <td align="left">901
+    </td></tr>
+    <tr>
+    <td><i><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/28/Flag_of_Puerto_Rico.svg/23px-Flag_of_Puerto_Rico.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/28/Flag_of_Puerto_Rico.svg/35px-Flag_of_Puerto_Rico.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/28/Flag_of_Puerto_Rico.svg/45px-Flag_of_Puerto_Rico.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Puerto_Rico" title="Puerto Rico">Puerto Rico</a></i></td>
+    <td align="left">771</td>
+    <td align="left">706</td>
+    <td align="left">1,167
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Flag_of_Barbados.svg/23px-Flag_of_Barbados.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Flag_of_Barbados.svg/35px-Flag_of_Barbados.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Flag_of_Barbados.svg/45px-Flag_of_Barbados.svg.png 2x" data-file-width="1500" data-file-height="1000" width="23" height="15">&nbsp;</span><a href="/wiki/Barbados" title="Barbados">Barbados</a></td>
+    <td align="left">758</td>
+    <td align="left">746</td>
+    <td align="left">733
+    </td></tr>
+    <tr>
+    <td><i><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/35px-Flag_of_France.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/45px-Flag_of_France.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/R%C3%A9union" title="Réunion">Réunion</a></i></td>
+    <td align="left">732</td>
+    <td align="left">757</td>
+    <td align="left">730
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Cyprus.svg/23px-Flag_of_Cyprus.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Cyprus.svg/35px-Flag_of_Cyprus.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_Cyprus.svg/45px-Flag_of_Cyprus.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Cyprus" title="Cyprus">Cyprus</a></td>
+    <td align="left">714</td>
+    <td align="left">717</td>
+    <td align="left">810
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Palestine.svg/23px-Flag_of_Palestine.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Palestine.svg/35px-Flag_of_Palestine.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Palestine.svg/46px-Flag_of_Palestine.svg.png 2x" data-file-width="432" data-file-height="216" width="23" height="12">&nbsp;</span><a href="/wiki/State_of_Palestine" title="State of Palestine">Palestine</a></td>
+    <td align="left">677</td>
+    <td align="left">654</td>
+    <td align="left">639
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/64/Flag_of_Trinidad_and_Tobago.svg/23px-Flag_of_Trinidad_and_Tobago.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/64/Flag_of_Trinidad_and_Tobago.svg/35px-Flag_of_Trinidad_and_Tobago.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/64/Flag_of_Trinidad_and_Tobago.svg/46px-Flag_of_Trinidad_and_Tobago.svg.png 2x" data-file-width="800" data-file-height="480" width="23" height="14">&nbsp;</span><a href="/wiki/Trinidad_and_Tobago" title="Trinidad and Tobago">Trinidad and Tobago</a></td>
+    <td align="left">644</td>
+    <td align="left">631</td>
+    <td align="left">617
+    </td></tr>
+    <tr>
+    <td><i><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/35px-Flag_of_France.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/45px-Flag_of_France.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Martinique" title="Martinique">Martinique</a></i></td>
+    <td align="left">352</td>
+    <td align="left">356</td>
+    <td align="left">353
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Flag_of_Dominica.svg/23px-Flag_of_Dominica.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Flag_of_Dominica.svg/35px-Flag_of_Dominica.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Flag_of_Dominica.svg/46px-Flag_of_Dominica.svg.png 2x" data-file-width="1200" data-file-height="600" width="23" height="12">&nbsp;</span><a href="/wiki/Dominica" title="Dominica">Dominica</a></td>
+    <td align="left">337</td>
+    <td align="left">346</td>
+    <td align="left">354
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Flag_of_Tunisia.svg/23px-Flag_of_Tunisia.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Flag_of_Tunisia.svg/35px-Flag_of_Tunisia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Flag_of_Tunisia.svg/45px-Flag_of_Tunisia.svg.png 2x" data-file-width="1200" data-file-height="800" width="23" height="15">&nbsp;</span><a href="/wiki/Tunisia" title="Tunisia">Tunisia</a></td>
+    <td align="left">333</td>
+    <td align="left">328</td>
+    <td align="left">322
+    </td></tr>
+    <tr>
+    <td><i><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/35px-Flag_of_France.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/45px-Flag_of_France.svg.png 2x" data-file-width="900" data-file-height="600" width="23" height="15">&nbsp;</span><a href="/wiki/Guadeloupe" title="Guadeloupe">Guadeloupe</a></i></td>
+    <td align="left">210</td>
+    <td align="left">211</td>
+    <td align="left">213
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Saint_Lucia.svg/23px-Flag_of_Saint_Lucia.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Saint_Lucia.svg/35px-Flag_of_Saint_Lucia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Saint_Lucia.svg/46px-Flag_of_Saint_Lucia.svg.png 2x" data-file-width="1200" data-file-height="600" width="23" height="12">&nbsp;</span><a href="/wiki/Saint_Lucia" title="Saint Lucia">Saint Lucia</a></td>
+    <td align="left">160</td>
+    <td align="left">169</td>
+    <td align="left">179
+    </td></tr>
+    <tr>
+    <td><i><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/db/Flag_of_French_Polynesia.svg/23px-Flag_of_French_Polynesia.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/db/Flag_of_French_Polynesia.svg/35px-Flag_of_French_Polynesia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/db/Flag_of_French_Polynesia.svg/45px-Flag_of_French_Polynesia.svg.png 2x" data-file-width="600" data-file-height="400" width="23" height="15">&nbsp;</span><a href="/wiki/French_Polynesia" title="French Polynesia">French Polynesia</a></i></td>
+    <td align="left">119</td>
+    <td align="left">118</td>
+    <td align="left">120
+    </td></tr>
+    <tr>
+    <td><i><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/35/Flag_of_the_Cook_Islands.svg/23px-Flag_of_the_Cook_Islands.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/35/Flag_of_the_Cook_Islands.svg/35px-Flag_of_the_Cook_Islands.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/3/35/Flag_of_the_Cook_Islands.svg/46px-Flag_of_the_Cook_Islands.svg.png 2x" data-file-width="1200" data-file-height="600" width="23" height="12">&nbsp;</span><a href="/wiki/Cook_Islands" title="Cook Islands">Cook Islands</a></i></td>
+    <td align="left">35</td>
+    <td align="left">33</td>
+    <td align="left">25
+    </td></tr>
+    <tr>
+    <td><i><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Flag_of_the_Cayman_Islands.svg/23px-Flag_of_the_Cayman_Islands.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Flag_of_the_Cayman_Islands.svg/35px-Flag_of_the_Cayman_Islands.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Flag_of_the_Cayman_Islands.svg/46px-Flag_of_the_Cayman_Islands.svg.png 2x" data-file-width="1200" data-file-height="600" width="23" height="12">&nbsp;</span><a href="/wiki/Cayman_Islands" title="Cayman Islands">Cayman Islands</a></i></td>
+    <td align="left">22</td>
+    <td align="left">21</td>
+    <td align="left">21
+    </td></tr>
+    <tr>
+    <td><span class="flagicon"><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Seychelles.svg/23px-Flag_of_Seychelles.svg.png" decoding="async" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Seychelles.svg/35px-Flag_of_Seychelles.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Seychelles.svg/46px-Flag_of_Seychelles.svg.png 2x" data-file-width="1200" data-file-height="600" width="23" height="12">&nbsp;</span><a href="/wiki/Seychelles" title="Seychelles">Seychelles</a></td>
+    <td align="left">13</td>
+    <td align="left">13</td>
+    <td align="left">13
+    </td></tr>
+    </tbody><tfoot></tfoot></table>
+  </paginated-table>
 
-    var root = document.querySelector(".root");
-    var template = document.querySelector("template").innerHTML.trim();
-    var binding = new Conspiracy(template, { unhosted: 0, stripDirectives: true });
-    var data = {
-      name: "World",
-      containerClass: {
-        unwanted: false,
-        chonky: true
-      },
-      button: {
-        "aria-toggled": "false",
-        test: 123,
-        placeholder: undefined,
-        controls: true
-      },
-      buttonStyles: {
-        backgroundColor: "salmon",
-        border: "1px solid black",
-        padding: "20px",
-        display: "block",
-        margin: "8px 0"
-      },
-      buttonData: {
-        tagged: 123
-      },
-      inputProps: {
-        value: "assigned"
-      },
-      nested: {
-        counter: 0,
-        items: []
-      },
-      mapTest: new Map([[{ text: "alpha"}, { text: "uno"}], [{ text: "beta" }, { text: "dos" }]])
-    };
-
-    var urlGetter = {
-      get() {
-        return "#" + this.data;
-      }
-    };
-
-    var makeItem = function(label) {
-      var id = data.nested.items.length;
-      return {
-        data: id,
-        label,
-        get url() { return "#" + this.data }
-      };
-    };
-
-    data.nested.items.push(makeItem("A"));
-    data.nested.items.push(makeItem("B"));
-
-    binding.attach(root, data);
-    console.log(binding.elements);
-
-    var visible = false;
-    document.body.addEventListener("clickedtestbutton", e => {
-      console.log(`Got custom event: ${e.type}`);
-      data.visible = !data.visible;
-      data.nested.counter++;
-      var index = (Math.random() * (data.nested.items.length + 1)) | 0;
-      var add = makeItem("ADDED");
-      data.nested.items.splice(index, 0, add);
-      // data.nested.items.push(add);
-      console.log(data.nested.items);
-      binding.update(data);
-    });
-
-    document.body.addEventListener("hellomoved", e => {
-      var moved = e.originalEvent;
-      var coords = [moved.clientX, moved.clientY].join();
-      data.coords = coords;
-      data.inputProps.value = coords;
-      binding.update(data);
-    });
-
-    document.body.addEventListener("clickedonceonly", e => console.log(e.type));
-  </script>
+  <script type="module" src="./demo/paginated-table.js"></script>
+  
 </body>
 </html>
