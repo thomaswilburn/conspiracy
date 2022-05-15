@@ -187,9 +187,11 @@ Values can be injected into inline text by marking the insertion point with an H
 
 The attribute text should be a keypath to a value. If the value is equivalent, the marked element will be removed from the DOM. 
 
-* ``:if.not`` reverses this: the element will only exist in the DOM if the value is false, and will be removed if it is true.
+``:if.not`` reverses this: the element will only exist in the DOM if the value is false, and will be removed if it is true.
 
-Example::
+Example:
+
+.. code:: html
 
   <dialog :if="showModal"></dialog>
 
@@ -198,7 +200,9 @@ Example::
 
 Generates a copy of the marked element for every item in a collection (an Array, Map, Set, or Object). The attribute text follows the formula ``{itemName} of {collectionKeyPath}`` or ``{itemName}, {indexName} of {collectionKeyPath}``. ``itemName`` and ``indexName`` let you set keys to access each object and its index in the generated DOM. These keys shadow the original data values but do not overwrite them--if you use the same key as an existing property in your loop, it will persist only for the part of the template under ``:each``.
 
-Examples::
+Examples:
+
+.. code:: html
 
   <ul>
     <li :each="person of credits">
