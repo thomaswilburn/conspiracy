@@ -103,7 +103,36 @@ export default class ConspiracyElement extends HTMLElement {
       </code></pre>
 
       <p>
-        Because the Conspiracy template is applied to the shadow DOM, one catch is that <var>:on.event</var> directives should be added with the <var>.composed</var> option set, so that the event will pass the shadow DOM boundary and reach the element itself.
+        Because the Conspiracy template is applied to the shadow DOM, one catch is that <var>:on.event</var> directives should be added with the <var>.composed</var> option set, so that the event will pass the shadow DOM boundary and reach the element itself. 
+
+      <h2>Audio player</h2>
+
+      <p>
+        This is a simple audio player that can load a short playlist of items, provided via <var>source</var> child elements. The source is available <a href="./demo/audio-player.js">here</a>. I've populated it with the (as of today) most recent ten episodes from NPR's Code Switch podcast.
+
+      <p>
+        This element uses top-level await to load its HTML template. An advantage of systems like Conspiracy, where all templating is applied via attributes/elements (as contrasted to lit-html's tagged templates or JSX pre-processing) is that it's possible to author templates as plain text files--they don't have to be embedded in a JavaScript context.
+
+      <p>
+        Of course, async/await module loading is not necessarily a wise choice for production, where a bundle may be as much about dependency management and cache-busting as it is about keeping request counts low. But if you're building a personal project, or something small enough that you don't need bulletproof deployment processes, it certainly makes it much easier to iterate. If you don't want to use top-level await, you can take advantage of <var>customElements.whenDefined()</var> and <a href="https://github.com/thomaswilburn/radio-v2/blob/master/lib/element-base.js#L33">only define your elements after loading their templates asynchronously</a>.
+
+      <p>
+        Audio and other media playback is often difficult or frustrating to handle in other frameworks that insist on more abstraction from the DOM, or would like their data to be the source of truth. The simple fact is that if you're working with the audio or video tags, they have to be in charge of playback for 99% of use cases. Conspiracy is designed to work more seamlessly with elements that have their own state: its event system happily republishes the audio tag's loading and playback events so that our element can listen for them, and it's easy to get a reference for directly manipulating the playhead.
+
+      <audio-player>
+        <source src="https://play.podtrac.com/npr-510312/edge1.pod.npr.org/anon.npr-mp3/npr/codeswitch/2022/05/20220510_codeswitch_cs_sc_episode_2_final_w_ads_546pm_pt.mp3?awCollectionId=510312&awEpisodeId=1097873098&orgId=1&topicId=1015&d=3041&p=510312&story=1097873098&t=podcast&e=1097873098&size=48665958&ft=pod&f=510312" title="School Colors Episode 2: Tales From The Southside"></source>
+        <source src="https://play.podtrac.com/npr-510312/edge1.pod.npr.org/anon.npr-mp3/npr/codeswitch/2022/05/20220503_codeswitch_school_colors_full_mix_w_ad_ljd_453pm_pt.mp3?awCollectionId=510312&awEpisodeId=1096469394&orgId=1&topicId=1015&d=3520&p=510312&story=1096469394&t=podcast&e=1096469394&size=56330911&ft=pod&f=510312" title="School Colors Episode 1: There Is No Plan"></source>
+        <source src="https://play.podtrac.com/npr-510312/edge1.pod.npr.org/anon.npr-mp3/npr/codeswitch/2022/04/20220429_codeswitch_school_colors_trailer_scored_42922.mp3?awCollectionId=510312&awEpisodeId=1095625161&orgId=1&topicId=1015&d=206&p=510312&story=1095625161&t=podcast&e=1095625161&size=3298160&ft=pod&f=510312" title="Coming Soon: Code Switch presents 'School Colors'"></source>
+        <source src="https://play.podtrac.com/npr-510312/edge1.pod.npr.org/anon.npr-mp3/npr/codeswitch/2022/04/20220426_codeswitch_30th_anniversary_full_mix_540pm_pt.mp3?awCollectionId=510312&awEpisodeId=1093615224&orgId=1&topicId=1015&aggIds=1095690691&d=3033&p=510312&story=1093615224&t=podcast&e=1093615224&size=28703391&ft=pod&f=510312" title="The LA Uprising, a generation later"></source>
+        <source src="https://play.podtrac.com/npr-510312/edge1.pod.npr.org/anon.npr-mp3/npr/codeswitch/2022/04/20220419_codeswitch_cs_eeaao_full_mix_351pm_pt.mp3?awCollectionId=510312&awEpisodeId=1093583760&orgId=1&topicId=1015&d=1596&p=510312&story=1093583760&t=podcast&e=1093583760&size=25541530&ft=pod&f=510312" title="Race, queerness, and superpowers in 'Everything, Everywhere, All at Once'"></source>
+        <source src="https://play.podtrac.com/npr-510312/edge1.pod.npr.org/anon.npr-mp3/npr/codeswitch/2022/04/20220412_codeswitch_fashion_fair_code_switch_mix_ljd_412_noon.mp3?awCollectionId=510312&awEpisodeId=1092024318&orgId=1&topicId=1015&d=1544&p=510312&story=1092024318&t=podcast&e=1092024318&size=24718569&ft=pod&f=510312" title="A makeup company gets a facelift"></source>
+        <source src="https://play.podtrac.com/npr-510312/edge1.pod.npr.org/anon.npr-mp3/npr/codeswitch/2022/04/20220405_codeswitch_standing_rock_full_mix_ljd_351pm_pt.mp3?awCollectionId=510312&awEpisodeId=1090825396&orgId=1&topicId=1015&d=2196&p=510312&story=1090825396&t=podcast&e=1090825396&size=35139127&ft=pod&f=510312" title="A New Movement on Standing Rock"></source>
+        <source src="https://play.podtrac.com/npr-510312/edge1.pod.npr.org/anon.npr-mp3/npr/codeswitch/2022/03/20220330_codeswitch_cs_rt_lindy_hop__-_mix_3_final.mp3?awCollectionId=510312&awEpisodeId=1089354646&orgId=1&topicId=1015&d=2630&p=510312&story=1089354646&t=podcast&e=1089354646&size=42087280&ft=pod&f=510312" title="The dance that made its way from Harlem to Sweden"></source>
+        <source src="https://play.podtrac.com/npr-510312/edge1.pod.npr.org/anon.npr-mp3/npr/codeswitch/2022/03/20220323_codeswitch_cs_n_word_final.mp3?awCollectionId=510312&awEpisodeId=1087843455&orgId=1&topicId=1015&d=2292&p=510312&story=1087843455&t=podcast&e=1087843455&size=36675545&ft=pod&f=510312" title="Why the N-word is so toxic"></source>
+        <source src="https://play.podtrac.com/npr-510312/edge1.pod.npr.org/anon.npr-mp3/npr/codeswitch/2022/03/20220316_codeswitch_cs_anti-asian_hate__rerun_final_w_spon.mp3?awCollectionId=510312&awEpisodeId=1086739262&orgId=1&topicId=1015&d=1956&p=510312&story=1086739262&t=podcast&e=1086739262&size=31303516&ft=pod&f=510312" title="Screams and Silence"></source>
+      </audio-player>
+
+      <script type="module" src="./demo/audio-player.js"></script>
 
       <h2>Paginated table</h2>
 

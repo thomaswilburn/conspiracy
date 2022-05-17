@@ -1,0 +1,98 @@
+<style>
+:host {
+  display: block;
+  margin: 24px 0;
+  background: #DCF;
+  padding: 12px;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.title {
+  display: block;
+}
+
+.controls {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.controls progress {
+  flex: 1;
+}
+
+.controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  width: 48px;
+  height: 48px;
+  text-transform: uppercase;
+  background: white;
+  border: 1px solid #808;
+}
+
+.controls button[aria-pressed=true] {
+  background: black;
+  color: white;
+}
+
+.playlist {
+  margin-top: 0;
+}
+
+.playlist button {
+  display: inline;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.playlist [data-playing="true"] {
+  background: black;
+  color: white;
+}
+
+h4 {
+  margin-bottom: 0;
+}
+
+</style>
+<audio 
+  :element="audio" 
+  :attr.src="state.currentItem.url"
+  :on.timeupdate.composed="audioevent"
+  :on.play.composed="audioevent"
+  :on.pause.composed="audioevent"
+  :on.canplay.composed="audioevent"
+  :on.load.composed="audioevent"
+></audio>
+<b class="title"><!-- :state.currentItem.title --></b>
+<div class="controls">
+  <button
+    :on.click.composed="playaudio"
+    :attr.aria-pressed="state.playing"
+  >Play</button>
+  <progress 
+    :element="progress"
+    :assign="state.progress"
+    :on.click.composed="progresschange"
+  ></progress>
+</div>
+
+<h4>All episodes:</h4>
+<ul class="playlist">
+  <li :each="source, index of items">
+    <button 
+      :on.click.composed="playlistclick"
+      :attr.data-index="index"
+      :dataset="source">
+        <!-- :source.title -->    
+    </button>
+</ul>
