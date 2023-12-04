@@ -1,6 +1,5 @@
 {
-  "name": "conspiracy",
-  "description": "Conspiracy\r ==========",
+  "name": "@twilburn/conspiracy",
   "version": "1.0.0",
   "main": "rollup.config.js",
   "scripts": {

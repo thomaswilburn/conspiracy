@@ -25,7 +25,6 @@ module.exports = [{
     file: "dist/conspiracy.module.js",
     format: "es",
     exports: "named",
-    sourcemap: true,
-    plugins: [ terser() ]
+    sourcemap: true
   }
 }];
