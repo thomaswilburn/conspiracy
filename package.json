@@ -1,7 +1,7 @@
 {
   "name": "@twilburn/conspiracy",
-  "version": "1.0.0",
-  "main": "rollup.config.js",
+  "version": "1.0.1",
+  "main": "src/index.js",
   "scripts": {
     "build": "rollup --config"
   },

@@ -8,6 +8,27 @@ Conspiracy is a templating/data binding library for cranks and weirdos. It's a t
 
 See the `demo page <https://thomaswilburn.github.io/conspiracy/>`_ for an example of a component built with Conspiracy.
 
+Importing Conspiracy
+====================
+
+Depending on your needs, there are several ways to get Conspiracy into your project.
+
+If you're working with a bundler built on Node, you can install it from npm:
+
+.. code::
+  
+  npm install @twilburn/conspiracy
+
+When using ES modules on a project, you can also import from unpkg, or directly from the repo:
+
+.. code:: javascript
+
+  import { Conspiracy } from "https://unpkg.com/@twilburn/conspiracy";
+  // or
+  import { Conspiracy } from "https://raw.githubusercontent.com/thomaswilburn/conspiracy/main/src/index.js";
+
+However, a strong option when working on modern projects is to use Deno's ``vendor`` functionality to download Conspiracy from the repo and store it locally with your code, using the generated import map to route its remote URL into the cached version. Details on the vendor tool is available `here`_<https://raw.githubusercontent.com/thomaswilburn/conspiracy/main/src/index.js>. Baldur Bjarnason has written about using these import maps in your client-side code `here`_<https://www.baldurbjarnason.com/2023/dynamic-import-map/>.
+
 Theory
 ======
 
