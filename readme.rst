@@ -36,7 +36,7 @@ Using Conspiracy is a three stage process. First, we create an instance by passi
   let template = `
     <ul>
       <li :each="item of items">
-        <a :attr="item.url"><!-- :item.text --></a>
+        <a :attr.href="item.url"><!-- :item.text --></a>
     </ul>
   `;
 
