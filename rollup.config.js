@@ -3,7 +3,7 @@ var { terser } = require("rollup-plugin-terser");
 module.exports = [{
   input: "src/index.js",
   output: {
-    file: "dist/conspiracy.js",
+    file: "dist/conspiracy.cjs",
     format: "umd",
     name: "Conspiracy",
     exports: "named",
@@ -12,7 +12,7 @@ module.exports = [{
 }, {
   input: "src/index.js",
   output: {
-    file: "dist/conspiracy.min.js",
+    file: "dist/conspiracy.min.cjs",
     format: "umd",
     name: "Conspiracy",
     exports: "named",
