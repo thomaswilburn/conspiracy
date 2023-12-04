@@ -19,15 +19,13 @@ If you're working with a bundler built on Node, you can install it from npm:
   
   npm install @twilburn/conspiracy
 
-When using ES modules on a project, you can also import from unpkg, or directly from the repo:
+When using ES modules on a project, you can also import from unpkg, although this tends to be slow:
 
 .. code:: javascript
 
   import { Conspiracy } from "https://unpkg.com/@twilburn/conspiracy";
-  // or
-  import { Conspiracy } from "https://raw.githubusercontent.com/thomaswilburn/conspiracy/main/src/index.js";
 
-However, a strong option when working on modern projects is to use Deno's ``vendor`` functionality to download Conspiracy from the repo and store it locally with your code, using the generated import map to route its remote URL into the cached version. Details on the vendor tool is available `here <https://docs.deno.com/runtime/manual/tools/vendor>`_. Baldur Bjarnason has written about using these import maps in your client-side code `here <https://www.baldurbjarnason.com/2023/dynamic-import-map/>`_.
+However, a strong option when working on modern projects is to use Deno's ``vendor`` functionality to download Conspiracy `from the repo <https://raw.githubusercontent.com/thomaswilburn/conspiracy/main/src/index.js>`_ and store it locally with your code, using the generated import map to route its remote URL into the cached version. Details on the vendor tool is available `here <https://docs.deno.com/runtime/manual/tools/vendor>`_. Baldur Bjarnason has written about using these import maps in your client-side code `here <https://www.baldurbjarnason.com/2023/dynamic-import-map/>`_.
 
 Theory
 ======
