@@ -77,7 +77,7 @@ Directory of directives
 
 Directives are (usually) attributes added to elements that indicate how they should be bound to your data. These directives always have the following structure::
 
-  {namespace}:{directiveName}{args}="{text}"
+  {namespace}:{directiveName}.{args}="{text}"
 
 * ``namespace`` - defaults to an empty string, meaning that you can ignore it unless you set the corresponding option when creating your Conspiracy.
 * ``directiveName`` - the actual operation to perform. These are listed below.
@@ -103,7 +103,7 @@ When a directive talks about a "keypath," it refers to a dot-separated list of p
 
 Here are all the directives included with Conspiracy, their options, and how to set their values.
 
-``<!-- :text -->``
+``<!-- :text_keypath -->``
 ------------------
 
 Values can be injected into inline text by marking the insertion point with an HTML comment. The comment should a "directive" attribute string that's just the keypath of the value you want to insert (e.g., calling ``instance.update({ link: { text: "hello" } })`` would replace ``<!-- :link.text -->`` with the string "hello").
@@ -111,7 +111,7 @@ Values can be injected into inline text by marking the insertion point with an H
 ``:if``
 -------
 
-The attribute text should be a keypath to a value. If the value is equivalent, the marked element will be removed from the DOM. 
+The attribute text should be a keypath to a value. If the value is false, the marked element will be removed from the DOM. 
 
 ``:if.not`` reverses this: the element will only exist in the DOM if the value is false, and will be removed if it is true.
 
