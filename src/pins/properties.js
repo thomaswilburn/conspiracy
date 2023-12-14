@@ -1,4 +1,4 @@
-import Conspiracy from "../conspiracy.js";
+import { Conspiracy } from "../conspiracy.js";
 var { setPath } = Conspiracy;
 
 export class AssignPin {

@@ -39,7 +39,7 @@ TODO: It's probably still possible to add "on {key}" support to this instead of 
 
 */
 
-import Conspiracy from "../conspiracy.js";
+import { Conspiracy } from "../conspiracy.js";
 
 export class EachPin {
   static name = "each";

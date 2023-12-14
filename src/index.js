@@ -1,4 +1,4 @@
-import Conspiracy from "./conspiracy.js";
+import { Conspiracy, LIVE } from "./conspiracy.js";
 
 import { IfPin, EachPin } from "./pins/structure.js";
 import { EventPin } from "./pins/event.js";
@@ -13,4 +13,4 @@ var all = [
 ];
 all.forEach(Pin => Conspiracy.registerDirective(Pin));
 
-export { Conspiracy };
+export { Conspiracy, LIVE };

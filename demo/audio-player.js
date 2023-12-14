@@ -3,11 +3,38 @@ import ConspiracyElement from "./conspiracy-element.js";
 var templateRequest = await fetch(import.meta.url + "/../audio-player.html");
 var template = await templateRequest.text();
 
+import { LIVE } from "../src/index.js";
+
+class Counter extends EventTarget {
+  value = { count: 0 };
+  interval = null;
+  [LIVE] = "value";
+
+  constructor() {
+    super();
+    this.start(1000);
+  }
+
+  update() {
+    this.value.count++;
+    this.dispatchEvent(new Event("value"));
+  }
+
+  start(rate) {
+    this.interval = window.setInterval(this.update.bind(this), rate);
+  }
+
+  stop() {
+    window.clearInterval(this.interval);
+  }
+}
+
 export default class AudioPlayer extends ConspiracyElement {
   static template = template;
 
   items = [];
   state = {
+    liveEvent: new Counter(),
     currentitem: null,
     progress: {}
   };

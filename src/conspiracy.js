@@ -6,11 +6,15 @@ const DEFAULTS = {
   stripDirectives: false // remove directive attributes from the output
 };
 
-export default class Conspiracy {
+export const LIVE = Symbol("Conspiracy live value");
+
+export class Conspiracy {
   bindings = [];
   root = null;
   template = null;
   elements = {};
+  previous = null;
+  subscriptions = new WeakMap();
 
   constructor(template, config = {}) {
     this.setupTemplate(template);
@@ -110,9 +114,26 @@ export default class Conspiracy {
 
   update(data) {
     for (var { pin, path } of this.bindings) {
-      var value = Conspiracy.getPath(data, path);
+      var chain = Conspiracy.getPathChain(data, path);
+      var value = chain.at(-1);
+      var sub = chain.findLast(link => link instanceof Object && LIVE in link);
+      var exSub = this.subscriptions.get(pin);
+      if (sub) {
+        if (sub != exSub && exSub) {
+          exSub.removeEventListener(exSub[LIVE], this);
+        }
+        sub.addEventListener(sub[LIVE], this);
+      } else if (exSub) {
+        exSub.removeEventListener(exSub[LIVE], this);
+      }
+
       pin.update(value, data);
     }
+    this.previous = data;
+  }
+
+  handleEvent() {
+    this.update(this.previous);
   }
 
   parseDirectiveName(name) {
@@ -167,15 +188,25 @@ export default class Conspiracy {
     return { terminated, cursor };
   }
 
-  static getPath(object, keyPath) {
+  static getPathChain(object, keyPath) {
     var search = object;
-    for (var k of keyPath) {
+    var links = [search];
+    var terminal = keyPath.at(-1);
+    for (var i = 0; i < keyPath.length - 1; i++) {
+      var k = keyPath[i];
       if (!(k in search)) {
-        return undefined;
+        links.push(undefined);
+        return links;
       }
       search = search[k];
+      links.push(search);
     }
-    return search;
+    links.push(search[terminal]);
+    return links;
+  }
+
+  static getPath(object, keyPath) {
+    return Conspiracy.getPathChain(object, keyPath).at(-1);
   }
 
   static setPath(object, keyPath, value) {
