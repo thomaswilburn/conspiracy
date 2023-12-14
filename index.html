@@ -103,7 +103,17 @@ export default class ConspiracyElement extends HTMLElement {
       </code></pre>
 
       <p>
-        Because the Conspiracy template is applied to the shadow DOM, one catch is that <var>:on.event</var> directives should be added with the <var>.composed</var> option set, so that the event will pass the shadow DOM boundary and reach the element itself. 
+        Because the Conspiracy template is applied to the shadow DOM, one catch is that <var>:on.event</var> directives should be added with the <var>.composed</var> option set, so that the event will pass the shadow DOM boundary and reach the element itself.
+
+      <h2>Timer</h2>
+
+      <p>
+        This clock is designed to show off live values via event targets. Each timer is an <var>EventTarget</var> that fires tick events when it starts or as the time counts up.
+
+      <p>
+        <multi-timer></multi-timer>
+
+      <script type="module" src="./demo/clock.js"></script>
 
       <h2>Audio player</h2>
 
