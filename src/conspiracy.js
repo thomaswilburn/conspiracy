@@ -14,6 +14,7 @@ export class Conspiracy {
   template = null;
   elements = {};
   previous = null;
+  publishers = new WeakMap();
   subscriptions = new WeakMap();
 
   constructor(template, config = {}) {
@@ -116,24 +117,49 @@ export class Conspiracy {
     for (var { pin, path } of this.bindings) {
       var chain = Conspiracy.getPathChain(data, path);
       var value = chain.at(-1);
-      var sub = chain.findLast(link => link instanceof Object && LIVE in link);
-      var exSub = this.subscriptions.get(pin);
-      if (sub) {
-        if (sub != exSub && exSub) {
-          exSub.removeEventListener(exSub[LIVE], this);
-        }
-        sub.addEventListener(sub[LIVE], this);
-      } else if (exSub) {
-        exSub.removeEventListener(exSub[LIVE], this);
+      var pub = chain.findLast(link => link instanceof Object && LIVE in link);
+      if (pub) {
+        var pathFromPub = path.slice(chain.lastIndexOf(pub));
+        this.watch(pin, pub, pathFromPub);
       }
-
       pin.update(value, data);
     }
     this.previous = data;
   }
 
-  handleEvent() {
-    this.update(this.previous);
+  watch(pin, publisher, path) {
+    var watching = this.subscriptions.get(pin);
+    // nothing to do
+    if (watching && publisher == watching.publisher) return;
+    if (watching) {
+      // unsubscribe and remove pin from publisher dependency list
+      var ex = watching.publisher[LIVE];
+      watching.publisher.removeEventListener(ex, this);
+      var deps = this.publishers.get(watching.publisher)
+      deps.delete(pin);
+    }
+    this.subscriptions.set(pin, {
+      publisher,
+      pin,
+      path: path.slice(path.lastIndexOf(publisher) + 1)
+    });
+    var dependencies = this.publishers.get(publisher);
+    if (!dependencies) {
+      dependencies = new Set();
+      this.publishers.set(publisher, dependencies);
+    }
+    dependencies.add(pin);
+    publisher.addEventListener(publisher[LIVE], this);
+  }
+
+  handleEvent(e) {
+    var source = e.target;
+    var dependencies = this.publishers.get(source);
+    for (var pin of dependencies) {
+      var sub = this.subscriptions.get(pin);
+      var value = Conspiracy.getPath(source, sub.path);
+      pin.update(value);
+    }
   }
 
   parseDirectiveName(name) {

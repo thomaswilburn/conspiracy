@@ -34,7 +34,7 @@ export default class AudioPlayer extends ConspiracyElement {
 
   items = [];
   state = {
-    liveEvent: new Counter(),
+    live: new Counter(),
     currentitem: null,
     progress: {}
   };
