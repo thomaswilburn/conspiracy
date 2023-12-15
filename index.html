@@ -145,7 +145,7 @@ var thereTemplate = Conspiracy.fromString(`
 </div>
 `);
 
-app.refs.there.replaceChildren(...clocks.map(c => thereTemplate.renderElement(c)))
+app.refs.there.replaceChildren(...clocks.map(c => thereTemplate.renderDOM(c)))
 
 
 </script>

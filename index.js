@@ -170,6 +170,11 @@ export class Conspiracy {
     return fragment;
   }
 
+  renderDOM(data) {
+    var fragment = this.clone(data);
+    return fragment.dom;
+  }
+
   renderElement(data) {
     var fragment = this.clone(data);
     return fragment.element;
