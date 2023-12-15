@@ -29,6 +29,7 @@ export class AttributePin {
 
   update(v) {
     if (v == this.value) return;
+    if (this.options.not) v = !v;
     this.value = v;
     if (!this.options.toggle && (typeof v == "string" || typeof v == "number")) {
       this.node.setAttribute(this.name, v);
@@ -43,11 +44,16 @@ export class ClassPin {
 
   attach(node, params, attrValue) {
     this.key = attrValue;
-    this.className = params;
+    var [name, ...options] = params.split(".");
+    this.className = name;
+    this.options = Object.fromEntries(options.map(o => [o, true]));
     this.node = node;
   }
 
   update(v) {
+    if (this.options.not) {
+      v = !v;
+    }
     this.node.classList.toggle(this.className, v);
   }
 }

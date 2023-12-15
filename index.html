@@ -1,36 +1,151 @@
 <!doctype html>
 
-<style>
-.highlight {
-  background: yellow;
+<template id="clock">
+  <style>
+:host {
+  display: inline-block;
 }
-</style>
 
-<template id="source">
-  <div ref:outer class:highlight="b">
-    <!-- text:a -->
-    <embed text:b>
+.time {
+  display: flex;
+  align-items: center;
+  font-family: system-ui;
+  font-variant-numeric: tabular-nums;
+  gap: 16px;
+}
+
+.big {
+  font-size: 400%;
+}
+
+.suffix {
+  font-weight: bold;
+}
+
+.faded {
+  opacity: 30%;
+}
+  </style>
+  <div class="time">
+    <div class="big">
+      <embed text:hours>:<embed text:minutes>:<embed text:seconds>
+    </div>
+    <div class="suffix">
+      <span class:faded="pm">AM</span>
+      <hr>
+      <span class:faded.not="pm">PM</span>
+    </div>
   </div>
-  <button on:click="demo-event" attr:hidden.toggle="nested.hideButton"><embed text:nested.property></button>
 </template>
 
-<div id="first"></div>
-<div id="second"></div>
+<template id="multiple">
+  <style>
+.clocks {
+  text-align: center;
+  font-family: system-ui;
+}
+
+.here {
+  & h1 {
+    font-weight: bold;
+    margin: 0;
+  }
+}
+
+.there {
+  display: flex;
+  justify-content: space-around;
+  font-size: 60%;
+  border-top: 2px dashed black;
+  margin-top: 20px;
+  padding-top: 20px;
+
+  h2 {
+    margin: 0;
+    font-size: 200%;
+  }
+}
+  </style>
+  <div class="clocks">
+    <div class="here">
+      <h1>Chicago</h1>
+      <clock-face></clock-face>
+    </div>
+    <div ref:there class="there"></div>
+  </div>
+</template>
+
+<div id="host"></div>
 
 <script type="module">
+
 import { Conspiracy } from "./index.js";
-var data = { a: "hello", b: "world", nested: { property: "Click me!" } };
 
-var conspiracy = new Conspiracy(window.source);
-var firstFragment = conspiracy.renderTo(first, data);
+function timeParts(date) {
+  var pm = false;
+  var hours = date.getHours();
+  if (hours == 0) hours = 12;
+  if (hours > 12) {
+    hours -= 12;
+    pm = true;
+  }
+  return {
+    hours: String(hours).padStart(2, "0"),
+    minutes: String(date.getMinutes()).padStart(2, "0"),
+    seconds: String(date.getSeconds()).padStart(2, "0"),
+    pm
+  }
+}
 
-data.nested.hideButton = true;
-setTimeout(() => firstFragment.update(data), 5000);
+var clockTemplate = new Conspiracy(window.clock);
 
-console.log(firstFragment);
+class ClockFace extends HTMLElement {
+  constructor() {
+    super();
+    var root = this.attachShadow({ mode: "open" });
+    this.ui = clockTemplate.renderTo(root);
+    this.update = this.update.bind(this);
+  }
 
-conspiracy.renderTo(second, { a: "goodbye", b: "conspiracy", nested: { property: "also clickable" }});
+  connectedCallback() {
+    this.disconnectedCallback();
+    this.interval = setInterval(this.update, 1000);
+    this.update();
+  }
 
-document.addEventListener("demo-event", e => console.log(e));
+  disconnectedCallback() {
+    if (this.interval) {
+      clearInterval(this.interval);
+      this.interval = null;
+    }
+  }
+
+  update() {
+    var offset = (this.getAttribute("offset") || 0) * 60 * 60 * 1000;
+    var now = Date.now()
+    var time = new Date(now + offset);
+    this.ui.update(timeParts(time));
+  }
+}
+
+customElements.define("clock-face", ClockFace);
+
+var app = new Conspiracy(multiple).renderTo(host);
+
+var clocks = [
+  { label: "Washington", offset: -1 },
+  { label: "Seattle", offset: 2 },
+  { label: "Barcelona", offset: -7 }
+];
+
+var thereTemplate = Conspiracy.fromString(`
+<div class="location">
+  <h2><!-- text:label --></h2>
+  <clock-face attr:offset="offset"></clock-face>
+</div>
+`);
+
+app.refs.there.replaceChildren(...clocks.map(c => thereTemplate.renderElement(c)))
+
 
 </script>

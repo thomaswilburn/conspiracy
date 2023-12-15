@@ -13,9 +13,10 @@ export function getPath(target, pathstring) {
 }
 
 export class ConspiracyFragment {
-  constructor(result) {
+  constructor(result, data) {
     Object.assign(this, result);
     this.element = this.dom.firstElementChild;
+    if (data) this.update(data);
   }
 
   populate(target, data) {
@@ -38,6 +39,12 @@ export class Conspiracy {
   paths = [];
   template = null;
   targets = new WeakMap();
+
+  static fromString(source) {
+    var template = document.createElement("template");
+    template.innerHTML = source.trim();
+    return new Conspiracy(template);
+  }
 
   constructor(template) {
     this.template = template;
@@ -152,15 +159,20 @@ export class Conspiracy {
     return node;
   }
 
-  clone() {
+  clone(data) {
     var result = this.paths == 0 ? this.cloneFromTemplate() : this.cloneFromPaths();
-    return new ConspiracyFragment(result);
+    return new ConspiracyFragment(result, data);
   }
 
   renderTo(target, data) {
     var fragment = this.clone();
     fragment.populate(target, data);
     return fragment;
+  }
+
+  renderElement(data) {
+    var fragment = this.clone(data);
+    return fragment.element;
   }
 }
 
