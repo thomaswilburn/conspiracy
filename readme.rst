@@ -14,33 +14,36 @@ Create a Conspiracy template by either passing a template tag to the constructor
   
   // use an existing <template> tag
   var tag = document.querySelector(`template#demo`);
-  var template = new Conspiracy(templateTag);
+  var template = new Conspiracy(tag);
 
   // use a template string
-  var templateContents = await fetch("template.html").then(r => r.text())
-  var template = Conspiracy.fromString(templateContents);
+  var contents = await fetch("template.html").then(r => r.text())
+  var template = Conspiracy.fromString(contents);
 
-Once a Conspiracy object is created, you can clone it to create a new ConspiracyBinding. The fragment provides access to the new DOM, as well as a stable object that can be used to update it.
+Once a Conspiracy object is created, you can clone it to create a new ConspiracyBinding. The binding object provides access to the new DOM, as well as methods that can be used to update it.
 
 .. code:: javascript
 
     var template = Conspiracy.fromString(`
       <div ref:container>
         <!-- text:greeting --> World
-        <ul ref:links></ul>
       </div>
     `);
-    var fragment = template.clone({ greeting: "Hello" });
+    var binding = template.clone({ greeting: "Hello" });
 
     // add this to the page
-    document.body.append(fragment.dom);
-    // you can also access fragment.element for a single node
+    document.body.append(binding.dom);
+    // you can also access binding.element for its first child node
+    // this is more useful for creating instances during iteration
+    document.body.append(binding.element);
     
-    // let's change it
-    fragment.update({ greeting: "Salutations" });
+    // let's change the live contents
+    // update() selectively mutates the binding's DOM nodes
+    // you don't have to reattach or re-clone
+    binding.update({ greeting: "Salutations" });
 
     // we can access specific tagged elements as well
-    console.log(fragment.refs.container); // the outer <div>
+    console.log(binding.refs.container); // the outer <div>
 
 Conspiracy doesn't provide any support for looping on its own, but it's easy enough to implement using the standard ``replaceChildren()`` method.
 
@@ -55,7 +58,9 @@ Conspiracy doesn't provide any support for looping on its own, but it's easy eno
       { label: "Blog", url: "https://milezero.org" }
     ];
 
-    fragment.refs.links.replaceChildren(links.map(item => listItem.renderElement(item)));
+    // a template's renderElement() method hands you back
+    // a fresh clone of the first child element
+    ul.replaceChildren(links.map(item => listItem.renderElement(item)));
 
 Templating
 ==========
@@ -74,6 +79,7 @@ Conspiracy's template code will look familiar to anyone who has used Vue: it's m
 You'd see the following values for these keypaths:
 
 * "a.b.c" = ``"value"``
+* "a.b" = ``{ c: "value " }``
 * "d" = ``true``
 * "a.e" = ``undefined``
 
@@ -88,10 +94,14 @@ The comment will be replaced with your text value whenever you update. You can a
 
     <embed text:replaced.by.something >
 
+When using the element directive form, you can specify the key either in the attribute name, or in the value, depending on your preference::
+
+    <embed text:="replaced.by.something" >
+
 Attributes
 ----------
 
-You can change an attribute on an element using this directive. If the ``.toggle`` option is provided, or if the value at the keypath is something other than a string or number, it'll be used to add or remove the attribute instead. You can invert this by adding the ``.not`` option::
+You can change an attribute on an element using this directive. If the ``.toggle`` option is provided, or if the value at the keypath is something other than a string or number, it'll be used to add or remove the attribute instead. You can invert a toggle by adding the ``.not`` option::
 
     <a
       attr:href="link.url"
@@ -100,9 +110,9 @@ You can change an attribute on an element using this directive. If the ``.toggle
       <!-- text:link.label -->
     </a>
 
-There's a special helper for toggling classes as well. This code would add a "faded" class to the div only when the ``ifFaded`` value is not true::
+There's a special helper for toggling classes as well. This code would add a "faded" class to the div only when the ``active`` value is not true::
 
-    <div class:faded.not="ifFaded"></div>
+    <div class:faded.not="active"></div>
 
 Events
 ------
@@ -115,7 +125,11 @@ In this case, clicking the button will dispatch a "clicked-button" event from it
 
     <input type="color" on:input.composed="color-through-shadow"></input>
 
-Dispatching custom events may seem odd, but it means you cannot leak memory via these listeners, and it works well if your custom event registers for multiple listeners through ``handleEvent()`` instead of individual methods.
+The options also control the ``addEventListener()`` call, so you can register an event so that it only fires once using::
+
+    <button on:click.once="single-fire">One time only</button>
+
+Dispatching custom events may seem odd, but it means you cannot leak memory via these listeners, and it works well if your custom event registers for multiple listeners through ``handleEvent()`` instead of individual methods. It is also effective for "aliasing" events that are going to trigger the same codepath, such as the UI for media playback.
 
 References
 ----------
@@ -129,4 +143,13 @@ If you need access to an element, such as for populating a list, you can tag it 
     </main>
 
     // when the following is cloned:
-    // fragment.refs = { outer: <main>, inner: <section>, portrait: <img> }
+    // binding.refs = { outer: <main>, inner: <section>, portrait: <img> }
+
+Properties
+----------
+
+Custom elements may take in JavaScript values directly using properties, and these can also be set and updated using Conspiracy using the ``prop`` directive::
+
+    <input prop:value="initial">
+
+These bindings are one-way only -- they set the property, but in order to read it or react to changes, you'll need to set an event listener or use a reference.

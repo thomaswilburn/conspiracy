@@ -73,3 +73,19 @@ export class EventPin {
     }, options);
   }
 }
+
+export class PropertyPin {
+  static directive = "prop";
+  value = null;
+
+  attach(node, params, keypath) {
+    this.node = node;
+    this.key = keypath;
+    this.property = params;
+  }
+
+  update(v) {
+    if (v == this.value) return;
+    this.node[this.property] = this.value = v;
+  }
+}
