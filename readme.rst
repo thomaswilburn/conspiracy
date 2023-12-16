@@ -20,7 +20,7 @@ Create a Conspiracy template by either passing a template tag to the constructor
   var templateContents = await fetch("template.html").then(r => r.text())
   var template = Conspiracy.fromString(templateContents);
 
-Once a Conspiracy object is created, you can clone it to create a new ConspiracyFragment. The fragment provides access to the new DOM, as well as a stable object that can be used to update it.
+Once a Conspiracy object is created, you can clone it to create a new ConspiracyBinding. The fragment provides access to the new DOM, as well as a stable object that can be used to update it.
 
 .. code:: javascript
 
@@ -60,7 +60,7 @@ Conspiracy doesn't provide any support for looping on its own, but it's easy eno
 Templating
 ==========
 
-Conspiracy's template code will look familiar to anyone who has used Vue: it's mostly a set of directive attributes in the form of ``command:type.option="path"``. The path is usually a keypath inside the data object passed into ``Conspiracy.clone()`` or ``ConspiracyFragment.update()``. For example, on the following object::
+Conspiracy's template code will look familiar to anyone who has used Vue: it's mostly a set of directive attributes in the form of ``command:type.option="path"``. The path is usually a keypath inside the data object passed into ``Conspiracy.clone()`` or ``ConspiracyBinding.update()``. For example, on the following object::
 
   { 
     a: {
@@ -120,7 +120,7 @@ Dispatching custom events may seem odd, but it means you cannot leak memory via 
 References
 ----------
 
-If you need access to an element, such as for populating a list, you can tag it with a ``ref:`` directive and it will be available on the ConspiracyFragment object::
+If you need access to an element, such as for populating a list, you can tag it with a ``ref:`` directive and it will be available on the ConspiracyBinding object::
 
     <main ref:outer>
       <section ref:inner>

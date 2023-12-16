@@ -12,7 +12,7 @@ export function getPath(target, pathstring) {
   return target;
 }
 
-export class ConspiracyFragment {
+export class ConspiracyBinding {
   constructor(result, data) {
     Object.assign(this, result);
     this.element = this.dom.firstElementChild;
@@ -161,7 +161,7 @@ export class Conspiracy {
 
   clone(data) {
     var result = this.paths == 0 ? this.cloneFromTemplate() : this.cloneFromPaths();
-    return new ConspiracyFragment(result, data);
+    return new ConspiracyBinding(result, data);
   }
 
   renderTo(target, data) {
