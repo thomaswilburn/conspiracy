@@ -13,6 +13,11 @@ export function getPath(target, pathstring) {
 }
 
 export class ConspiracyBinding {
+  pins = [];
+  refs = {};
+  dom = null;
+  element = null;
+
   constructor(result, data) {
     Object.assign(this, result);
     this.element = this.dom.firstElementChild;
@@ -31,6 +36,16 @@ export class ConspiracyBinding {
       var value = getPath(data, key);
       pin.update(value);
     }
+  }
+
+  destroy() {
+    for (var pin of this.pins) {
+      pin.destroy();
+    }
+    this.pins = null;
+    this.refs = null;
+    this.dom = null;
+    this.elements = null;
   }
 }
 

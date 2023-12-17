@@ -1,11 +1,18 @@
-export class TextPin {
+class Pin {
+  key = null;
+  value = null;
+  node = null;
+
+  destroy() {
+    this.value = null;
+  }
+}
+
+export class TextPin extends Pin {
   static directive = "text";
 
-  constructor() {
-    this.node = new Text();
-  }
-
   attach(node, params, attrValue) {
+    this.node = new Text();
     this.key = params || attrValue;
     return this.node;
   }
@@ -16,8 +23,10 @@ export class TextPin {
   }
 }
 
-export class AttributePin {
+export class AttributePin extends Pin {
   static directive = "attr";
+  name = null;
+  options = {};
 
   attach(node, params, attrValue) {
     this.key = attrValue;
@@ -39,13 +48,15 @@ export class AttributePin {
   }
 }
 
-export class ClassPin {
+export class ClassPin extends Pin {
   static directive = "class";
+  name = null;
+  options = {};
 
   attach(node, params, attrValue) {
     this.key = attrValue;
     var [name, ...options] = params.split(".");
-    this.className = name;
+    this.name = name;
     this.options = Object.fromEntries(options.map(o => [o, true]));
     this.node = node;
   }
@@ -54,15 +65,14 @@ export class ClassPin {
     if (this.options.not) {
       v = !v;
     }
-    this.node.classList.toggle(this.className, v);
+    this.node.classList.toggle(this.name, v);
   }
 }
 
-export class EventPin {
+export class EventPin extends Pin {
   static directive = "on";
   node = null;
   type = null;
-  value = null;
 
   handleEvent(e) {
     if (this.value) {
@@ -84,7 +94,7 @@ export class EventPin {
   }
 }
 
-export class PropertyPin {
+export class PropertyPin extends Pin {
   static directive = "prop";
   value = null;
 
