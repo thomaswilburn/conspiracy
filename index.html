@@ -27,13 +27,13 @@
 }
   </style>
   <div class="time">
-    <div class="big">
-      <embed text:hours>:<embed text:minutes>:<embed text:seconds>
+    <div class="big" on:click="toggleMilitary">
+      <embed text:=formattedTime.hours>:<embed text:=formattedTime.minutes>:<embed text:=formattedTime.seconds>
     </div>
     <div class="suffix">
-      <span class:faded="pm">AM</span>
+      <span class:faded="formattedTime.pm">AM</span>
       <hr>
-      <span class:faded.not="pm">PM</span>
+      <span class:faded.not="formattedTime.pm">PM</span>
     </div>
   </div>
 </template>
@@ -81,36 +81,36 @@
 
 import { Conspiracy } from "./index.js";
 
-function timeParts(date) {
-  var pm = false;
-  var hours = date.getHours();
-  if (hours == 0) hours = 12;
-  if (hours > 12) {
-    hours -= 12;
-    pm = true;
+class ConspiracyElement extends HTMLElement {
+  constructor() {
+    super();
+    var Class = new.target;
+    if (Class.template) {
+      this.attachShadow({ mode: "open" });
+      this.ui = Class.template.renderTo(this.shadowRoot);
+      queueMicrotask(() => this.render());
+    }
+    this.render = this.render.bind(this);
   }
-  return {
-    hours: String(hours).padStart(2, "0"),
-    minutes: String(date.getMinutes()).padStart(2, "0"),
-    seconds: String(date.getSeconds()).padStart(2, "0"),
-    pm
+
+  render() {
+    this.ui.update(this);
   }
 }
 
-var clockTemplate = new Conspiracy(window.clock);
+class ClockFace extends ConspiracyElement {
+  static template = new Conspiracy(window.clock);
 
-class ClockFace extends HTMLElement {
   constructor() {
     super();
-    var root = this.attachShadow({ mode: "open" });
-    this.ui = clockTemplate.renderTo(root);
-    this.update = this.update.bind(this);
+    this.toggleMilitary = this.toggleMilitary.bind(this);
+    this.use24Hours = false;
   }
 
   connectedCallback() {
     this.disconnectedCallback();
-    this.interval = setInterval(this.update, 1000);
-    this.update();
+    this.interval = setInterval(this.render, 1000);
+    this.render();
   }
 
   disconnectedCallback() {
@@ -120,11 +120,33 @@ class ClockFace extends HTMLElement {
     }
   }
 
-  update() {
+  render() {
+    this.ui.update(this);
+  }
+
+  get formattedTime() {
     var offset = (this.getAttribute("offset") || 0) * 60 * 60 * 1000;
     var now = Date.now()
     var time = new Date(now + offset);
-    this.ui.update(timeParts(time));
+    var hours = time.getHours();
+    var pm = hours > 11;
+    if (!this.use24Hours) {
+      if (hours == 0) hours = 12;
+      if (hours > 12) {
+        hours -= 12;
+      }
+    }
+    return {
+      hours: String(hours).padStart(2, "0"),
+      minutes: String(time.getMinutes()).padStart(2, "0"),
+      seconds: String(time.getSeconds()).padStart(2, "0"),
+      pm
+    }
+  }
+
+  toggleMilitary() {
+    this.use24Hours = !this.use24Hours;
+    this.render();
   }
 }
 
@@ -133,9 +155,9 @@ customElements.define("clock-face", ClockFace);
 var app = new Conspiracy(multiple).renderTo(host);
 
 var clocks = [
-  { label: "Washington", offset: -1 },
-  { label: "Seattle", offset: 2 },
-  { label: "Barcelona", offset: -7 }
+  { label: "Washington", offset: +1 },
+  { label: "Seattle", offset: -2 },
+  { label: "Barcelona", offset: +7 }
 ];
 
 var thereTemplate = Conspiracy.fromString(`

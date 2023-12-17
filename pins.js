@@ -60,17 +60,27 @@ export class ClassPin {
 
 export class EventPin {
   static directive = "on";
-  static forget = true;
+  node = null;
+  type = null;
+  value = null;
 
-  attach(node, params, dispatch) {
-    var [ event, ...args ] = params.split(".");
-    var options = {
-      bubbles: true,
-      ...Object.fromEntries(args.map(s => [s, true]))
+  handleEvent(e) {
+    if (this.value) {
+      this.value.call(this.node, e);
     }
-    node.addEventListener(event, function(e) {
-      e.target.dispatchEvent(new Event(dispatch, options));
-    }, options);
+  }
+
+  attach(node, params, key) {
+    this.key = key;
+    var [ event, ...args ] = params.split(".");
+    var options = Object.fromEntries(args.map(s => [s, true]));
+    this.node = node;
+    this.node.addEventListener(event, this, options);
+  }
+
+  update(v) {
+    if (v == this.value) return;
+    this.value = v;
   }
 }
 

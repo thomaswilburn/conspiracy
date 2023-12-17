@@ -98,6 +98,8 @@ When using the element directive form, you can specify the key either in the att
 
     <embed text:="replaced.by.something" >
 
+If your keypath contains capital letters, the latter is probably more useful, since HTML attributes are forcibly lower-cased by the parser.
+
 Attributes
 ----------
 
@@ -117,19 +119,15 @@ There's a special helper for toggling classes as well. This code would add a "fa
 Events
 ------
 
-Events in Conspiracy are a little different. Rather than letting you directly bind a listener to an element, the ``on:`` directive lets you choose a custom event to fire for that element::
+Use a ``event:`` directive to specify the keypath to a callback function for an event::
 
-    <button on:click="clicked-button">Click me!</button>
+    <button on:click="handleClick">Click me</button>
 
-In this case, clicking the button will dispatch a "clicked-button" event from it. By default, these events bubble, but they are not cancelable or composed. You can set those options if you want to use, if you want to use them in shadow DOM for example::
+Listeners are called like like a regular DOM event listener, in the ``this`` context of where the listener was attached. To have access to the current context, bind your listeners or use arrow functions.
 
-    <input type="color" on:input.composed="color-through-shadow"></input>
+You can also register a listener with the standard options after the event name. For exmaple, to fire your listener only once::
 
-The options also control the ``addEventListener()`` call, so you can register an event so that it only fires once using::
-
-    <button on:click.once="single-fire">One time only</button>
-
-Dispatching custom events may seem odd, but it means you cannot leak memory via these listeners, and it works well if your custom event registers for multiple listeners through ``handleEvent()`` instead of individual methods. It is also effective for "aliasing" events that are going to trigger the same codepath, such as the UI for media playback.
+    <input on:input.once="firstTimeOnly">
 
 References
 ----------
