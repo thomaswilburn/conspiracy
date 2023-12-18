@@ -122,6 +122,7 @@ export class Conspiracy {
 
     var crawl = (node, cloneParent, path = []) => {
       var clone = node.cloneNode();
+      var terminated = false;
       if (node.nodeType == Node.COMMENT_NODE) {
         // special case text comments
         var [ directive, params ] = node.nodeValue.trim().split(":");
@@ -140,7 +141,12 @@ export class Conspiracy {
           if (directive in directives) {
             var PinClass = directives[directive];
             var pin = new PinClass();
-            pin.attach(clone, params, value);
+            if (PinClass.terminal) {
+              terminated = true;
+              pin.attach(node, params, value);
+            } else {
+              pin.attach(clone, params, value);
+            }
             clone = pin.node ?? clone;
             if (!PinClass.forget) pins.push(pin);
             this.paths.push({ directive, params, value, path });
@@ -148,6 +154,7 @@ export class Conspiracy {
         }
       }
       cloneParent.append(clone);
+      if (terminated) return;
       var child = node.firstChild;
       var i = 0;
       while (child) {
