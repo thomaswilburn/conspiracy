@@ -102,6 +102,8 @@ If you need access to the keys, you can use the "key in collection" form of the 
       Key: <!-- text:index -->
     </div>
 
+When the key isn't specified, it'll be available by default as ``$`` on the scope object for each item.
+
 Attributes
 ----------
 
