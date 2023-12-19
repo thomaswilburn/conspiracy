@@ -191,16 +191,6 @@ export class Conspiracy {
     fragment.populate(target, data);
     return fragment;
   }
-
-  renderDOM(data) {
-    var fragment = this.clone(data);
-    return fragment.dom;
-  }
-
-  renderElement(data) {
-    var fragment = this.clone(data);
-    return fragment.element;
-  }
 }
 
 for (var PinClass of Object.values(pins)) {
