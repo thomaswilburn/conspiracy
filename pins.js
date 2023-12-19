@@ -139,16 +139,22 @@ export class EachPin extends Pin {
       this.node.parentNode.insertBefore(this.ender, this.node);
     }
     var cursor = this.node;
-    for (var [key, item] of collection.entries()) {
-      var node = this.nodes.get(item);
+    var key = -1;
+    for (var value of collection[Symbol.iterator]()) {
+      if (collection instanceof Map) {
+        var [key, value] = value;
+      } else {
+        key++;
+      }
+      var node = this.nodes.get(value);
       if (!node) {
         node = this.conspiracy.clone();
-        this.nodes.set(item, node);
+        this.nodes.set(value, node);
       }
       var scope = {
         [this.index]: key,
         ...context,
-        ...item
+        ...value
       };
       node.update(scope);
       if (cursor.nextSibling != node.element) {

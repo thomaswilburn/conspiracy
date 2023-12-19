@@ -86,7 +86,7 @@ If your keypath contains capital letters, the latter is probably more useful, si
 Iteration
 ---------
 
-You can loop over an array, Map, or Set (or anything else that implements ``.entries()``) using the ``each:`` directive::
+You can loop over an array, Map, or Set (or anything else that implements ``Symbol.iterator``) using the ``each:`` directive::
 
     <ul>
       <li each:="scope.listItems">
