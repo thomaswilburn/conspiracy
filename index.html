@@ -72,7 +72,7 @@
       <clock-face></clock-face>
     </div>
     <div ref:there class="there">
-      <div class="location" each:="clocks">
+      <div class="location" each:="clocks" attr:data-index="$">
         <h2><!-- text:label --></h2>
         <clock-face attr:offset="offset" prop:offsetValue="offset"></clock-face>
       </div>
@@ -162,6 +162,6 @@ var clocks = [
   { label: "Seattle", offset: -2 },
   { label: "Barcelona", offset: +7 }
 ];
-var app = new Conspiracy(multiple).renderTo(host, { clocks });
+var app = new Conspiracy(multiple, { clean: true }).renderTo(host, { clocks });
 
 </script>

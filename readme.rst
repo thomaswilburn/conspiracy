@@ -96,6 +96,12 @@ You can loop over an array, Map, or Set (or anything else that implements ``Symb
 
 Looped chunks are extracted from the template and converted into another Conspiracy instance. Each one has access to the outer context, but by default keys will be scoped to the item in the collection (e.g., in the example above, each item in the "scope.listItems" array is assumed to have properties for "url" and "label").
 
+If you need access to the keys, you can use the "key in collection" form of the ``each:`` attribute value::
+
+    <div each:="index in array">
+      Key: <!-- text:index -->
+    </div>
+
 Attributes
 ----------
 

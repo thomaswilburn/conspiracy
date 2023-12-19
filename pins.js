@@ -117,38 +117,36 @@ export class EachPin extends Pin {
   static terminal = true;
   key = null;
   value = null;
+  index = "$";
   conspiracy = null;
   nodes = new WeakMap();
 
-  attach(node, params, keypath) {
-    this.node = new Comment(keypath);
-    this.ender = new Comment("/" + keypath);
+  attach(node, params, loop) {
+    var { key, index } = loop.match(/((?<index>\w+)\s+in\s+)?(?<key>[\w\.]+$)/).groups;
+    this.key = key;
+    this.index = index ?? this.index;
+    this.node = new Comment(key);
+    this.ender = new Comment("/" + key);
     var template = document.createElement("template");
     node.removeAttribute(EachPin.directive + ":" + params);
     template.content.replaceChildren(node);
     this.conspiracy = new Conspiracy(template);
-    this.key = keypath;
   }
 
-  update(v, context) {
-    if (!v) return;
+  update(collection, context) {
+    if (!collection) return;
     if (!this.ender.parentElement) {
       this.node.parentNode.insertBefore(this.ender, this.node);
     }
-    var iterator;
-    if (v instanceof Map) {
-      iterator = v.values();
-    } else {
-      iterator = v[Symbol.iterator]();
-    }
     var cursor = this.node;
-    for (var item of iterator) {
+    for (var [key, item] of collection.entries()) {
       var node = this.nodes.get(item);
       if (!node) {
         node = this.conspiracy.clone();
         this.nodes.set(item, node);
       }
       var scope = {
+        [this.index]: key,
         ...context,
         ...item
       };
