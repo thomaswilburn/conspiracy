@@ -134,7 +134,7 @@ export class EachPin extends Pin {
   }
 
   update(collection, context) {
-    if (!collection) return;
+    if (!collection) collection = [];
     if (!this.ender.parentElement) {
       this.node.parentNode.insertBefore(this.ender, this.node);
     }
