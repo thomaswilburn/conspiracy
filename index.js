@@ -34,7 +34,7 @@ export class ConspiracyBinding {
     for (var pin of this.pins) {
       var { key } = pin;
       var value = getPath(data, key);
-      pin.update(value);
+      pin.update(value, data);
     }
   }
 

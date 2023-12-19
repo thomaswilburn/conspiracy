@@ -130,7 +130,7 @@ export class EachPin extends Pin {
     this.key = keypath;
   }
 
-  update(v) {
+  update(v, context) {
     if (!v) return;
     if (!this.ender.parentElement) {
       this.node.parentNode.insertBefore(this.ender, this.node);
@@ -148,7 +148,11 @@ export class EachPin extends Pin {
         node = this.conspiracy.clone();
         this.nodes.set(item, node);
       }
-      node.update(item);
+      var scope = {
+        ...context,
+        ...item
+      };
+      node.update(scope);
       if (cursor.nextSibling != node.element) {
         cursor.parentElement.insertBefore(node.element, cursor.nextSibling);
       }

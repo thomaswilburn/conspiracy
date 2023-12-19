@@ -45,23 +45,6 @@ Once a Conspiracy object is created, you can clone it to create a new Conspiracy
     // we can access specific tagged elements as well
     console.log(binding.refs.container); // the outer <div>
 
-Conspiracy doesn't provide any support for looping on its own, but it's easy enough to implement using the standard ``replaceChildren()`` method.
-
-.. code:: javascript
-
-    var listItem = Conspiracy.fromString(`
-      <li> <a attr:href="url"><!-- text:label --></a>
-    `);
-
-    var links = [
-      { label: "Portfolio", url: "https://thomaswilburn.net" },
-      { label: "Blog", url: "https://milezero.org" }
-    ];
-
-    // a template's renderElement() method hands you back
-    // a fresh clone of the first child element
-    ul.replaceChildren(links.map(item => listItem.renderElement(item)));
-
 Templating
 ==========
 
@@ -99,6 +82,19 @@ When using the element directive form, you can specify the key either in the att
     <embed text:="replaced.by.something" >
 
 If your keypath contains capital letters, the latter is probably more useful, since HTML attributes are forcibly lower-cased by the parser.
+
+Iteration
+---------
+
+You can loop over an array, Map, or Set (or anything else that implements ``Symbol.iterator``) using the ``each:`` directive::
+
+    <ul>
+      <li each:="scope.listItems">
+        <a attr:href="url"><!-- text:label --></a>
+      </li>
+    </ul>
+
+Looped chunks are extracted from the template and converted into another Conspiracy instance. Each one has access to the outer context, but by default keys will be scoped to the item in the collection (e.g., in the example above, each item in the "scope.listItems" array is assumed to have properties for "url" and "label").
 
 Attributes
 ----------
