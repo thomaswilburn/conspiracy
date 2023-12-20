@@ -49,7 +49,7 @@ Once a Conspiracy object is created, you can clone it to create a new Conspiracy
 ConspiracyElement
 =================
 
-A base class is provided that uses Conspiracy for shadow DOM templating. Any static ``template`` property declared on a subclass of ``ConspiracyElement`` will be generate a shadow root, populate the template, and queue a render. Rendering uses the element itself as the base data object passed to the Conspiracy instance, so anything you attach to the element class will be available to the template keypaths.
+A base class is provided that uses Conspiracy for shadow DOM templating. Any static ``template`` property declared on a subclass of ``ConspiracyElement`` will be used to generate a shadow root, populate it, and queue a render. Rendering uses the element itself as the base data object passed to the Conspiracy instance, so anything you attach to the element class will be available to the template keypaths.
 
 .. code:: javascript
 
