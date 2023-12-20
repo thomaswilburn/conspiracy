@@ -207,3 +207,32 @@ Custom elements may take in JavaScript values directly using properties, and the
     <input prop:value="initial">
 
 These bindings are one-way only -- they set the property, but in order to read it or react to changes, you'll need to set an event listener or use a reference.
+
+Custom Directives
+=================
+
+Internally, directives are just classes that implement the Pin interface::
+
+    class Pin {
+      // make this available for `pin:` attributes
+      static directive = "pin";
+      // stop parsing the subtree when this directive is processed?
+      static terminal = false;
+      // ignore this pin after attachment?
+      static forget = false;
+      // the keypath for updates
+      key = "key.path";
+      // the node this is attached to
+      node = null;
+
+      // called during cloning with values from pin:params="path"
+      attach(node, params, path) { }
+
+      // called during render with the current data value for its keypath
+      // as well as the root data object
+      update(value, data) { }
+    }
+
+During parsing, Conspiracy will call ``attach()`` for any matching attributes. If the Pin's ``node`` property is different from the node that was passed in, it will be used as a replacement in the output DOM. If your pin does not need to update with values during rendering, set the static ``forget`` class field to ``true`` (this is used for the ``refs`` lookup on the binding object). Pins marked ``terminal`` are processed first and stop the parser from descending further, which is primarily useful for structural directives like iteration.
+
+To add a pin, call ``Conspiracy.registerDirective()`` and pass in your class.
