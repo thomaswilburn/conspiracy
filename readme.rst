@@ -3,6 +3,7 @@ Conspiracy is an extremely minimal templating library intended for use with web 
 * Uses markup from ``<template>`` so it's faster than parsing HTML from strings
 * Allows for selective updates of rendered DOM, so it's fast and non-destructive
 * Templating language based on attributes and comments
+* Dynamic value positions are cached and used to speed up template instantiation after the first run
 * Designed for the future of ES import attributes (e.g., ``import document from "./template.html" with { type: "html" }``).
 
 Getting started
@@ -44,6 +45,57 @@ Once a Conspiracy object is created, you can clone it to create a new Conspiracy
 
     // we can access specific tagged elements as well
     console.log(binding.refs.container); // the outer <div>
+
+ConspiracyElement
+=================
+
+A base class is provided that uses Conspiracy for shadow DOM templating. Any static ``template`` property declared on a subclass of ``ConspiracyElement`` will be generate a shadow root, populate the template, and queue a render. Rendering uses the element itself as the base data object passed to the Conspiracy instance, so anything you attach to the element class will be available to the template keypaths.
+
+.. code:: javascript
+
+    class ClockFace extends ConspiracyElement {
+
+      // the template can be a string or a <template>
+      // strings may be easier in the current JS environment
+      static template = `
+      <!-- text:formattedTime.hours --> :
+      <!-- text:formattedTime.minutes --> :
+      <!-- text:formattedTime.seconds -->
+      <span if:="formattedTime.pm">PM</span>
+      <span if.not:"formattedTime.pm">AM</span>
+      `
+
+      connectedCallback() {
+        this.disconnectedCallback();
+        this.interval = setInterval(this.render, 1000);
+        this.render();
+      }
+
+      disconnectedCallback() {
+        if (this.interval) {
+          clearInterval(this.interval);
+          this.interval = null;
+        }
+      }
+
+      get formattedTime() {
+        var time = Date.now()
+        var hours = time.getHours();
+        var pm = hours > 11;
+        if (hours == 0) hours = 12;
+        if (hours > 12) {
+          hours -= 12;
+        }
+        return {
+          hours,
+          minutes: String(time.getMinutes()).padStart(2, "0"),
+          seconds: String(time.getSeconds()).padStart(2, "0"),
+          pm
+        }
+      }
+    }
+
+The ``render()`` function is also debounced to a microtask, so you can call it as often as you want without triggering excessive DOM thrashing. The template will be cached based on the constructor function, so subsequent element instances benefit from Conspiracy's cloning fast path. Subclasses of ``ConspiracyElement`` can also access their binding object via ``this.ui``.
 
 Templating
 ==========

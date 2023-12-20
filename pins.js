@@ -1,4 +1,4 @@
-import { Conspiracy } from "./index.js";
+import { Conspiracy } from "./conspiracy.js";
 
 class Pin {
   key = null;

@@ -84,27 +84,10 @@
 
 <script type="module">
 
-import { Conspiracy } from "./index.js";
-
-class ConspiracyElement extends HTMLElement {
-  constructor() {
-    super();
-    var Class = new.target;
-    if (Class.template) {
-      this.attachShadow({ mode: "open" });
-      this.ui = Class.template.renderTo(this.shadowRoot);
-      queueMicrotask(() => this.render());
-    }
-    this.render = this.render.bind(this);
-  }
-
-  render() {
-    this.ui.update(this);
-  }
-}
+import { Conspiracy, ConspiracyElement } from "./index.js";
 
 class ClockFace extends ConspiracyElement {
-  static template = new Conspiracy(window.clock);
+  static template = window.clock;
 
   constructor() {
     super();
@@ -123,10 +106,6 @@ class ClockFace extends ConspiracyElement {
       clearInterval(this.interval);
       this.interval = null;
     }
-  }
-
-  render() {
-    this.ui.update(this);
   }
 
   get formattedTime() {
