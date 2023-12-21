@@ -154,7 +154,13 @@ If you need access to the keys, you can use the "key in collection" form of the 
       Key: <!-- text:index -->
     </div>
 
-When the key isn't specified, it'll be available by default as ``$`` on the scope object for each item.
+When the key isn't specified, it'll be available by default as ``#`` on the scope object for each item. If you're looping over primitive values, like numbers, those will be available as ``@``. For example, to loop over an array of letters and display their index and their value::
+
+    <ul>
+      <li each:=letters>
+        index: <!-- text:# -->,
+        value: <!-- text:@ -->
+    </ul>
 
 Attributes
 ----------

@@ -125,7 +125,7 @@ export class EachPin extends Pin {
   static terminal = true;
   key = null;
   value = null;
-  index = "$";
+  index = "#";
   conspiracy = null;
   nodes = new WeakMap();
 
@@ -159,7 +159,7 @@ export class EachPin extends Pin {
       var primitive = false;
       // handle primitive values
       if (!(value instanceof Object)) {
-        scope = { value };
+        scope = { "#": key, "@": value };
         primitive = true;
       } else {
         scope = {

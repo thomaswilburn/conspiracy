@@ -90,6 +90,9 @@
       </div>
     </div>
   </div>
+  <ul hidden>
+    <li each:="letters"><!-- text:# --> <!-- text:@ -->
+  </li>
 </template>
 
 <div id="host"></div>
@@ -155,17 +158,21 @@ var clocks = [
   { label: "Tokyo", offset: -9 }
 ];
 
+var letters = "abcde".split("");
+
+var state = { letters, clocks };
+
 function doubleRAF(fn) {
   requestAnimationFrame(() => requestAnimationFrame(fn));
 }
 
-var app = new Conspiracy(multiple, { clean: true }).renderTo(host, { clocks });
+var app = new Conspiracy(multiple, { clean: true }).renderTo(host, state);
 if (true) setInterval(() => {
   clocks.push(clocks.shift());
   // FLIP, baby
   var locations = [...host.querySelectorAll(".there .location")];
   var elements = new Map(locations.map(clock => [clock, clock.getBoundingClientRect()]));
-  app.update({ clocks });
+  app.update(state);
   for (let place of locations) {
     var previous = elements.get(place);
     var now = place.getBoundingClientRect();
