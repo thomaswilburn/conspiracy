@@ -112,6 +112,14 @@ export class PropertyPin extends Pin {
   }
 }
 
+function insertAfter(after, node) {
+  if (after.nextSibling) {
+    after.parentNode.insertBefore(node, after.nextSibling);
+  } else {
+    after.parentNode.append(node);
+  }
+}
+
 export class EachPin extends Pin {
   static directive = "each";
   static terminal = true;
@@ -137,11 +145,7 @@ export class EachPin extends Pin {
   update(collection, context) {
     if (!collection) collection = [];
     if (!this.ender.parentElement) {
-      if (this.node.nextSibling) {
-        this.node.parentNode.insertBefore(this.ender, this.node.nextSibling);
-      } else {
-        this.node.parentNode.append(this.ender);
-      }
+      insertAfter(this.node, this.ender);
     }
     var cursor = this.node;
     var key = -1;
@@ -151,24 +155,37 @@ export class EachPin extends Pin {
       } else {
         key++;
       }
+      var scope;
+      var primitive = false;
+      // handle primitive values
+      if (!(value instanceof Object)) {
+        scope = { value };
+        primitive = true;
+      } else {
+        scope = {
+          [this.index]: key,
+          ...context,
+          ...value
+        };
+      }
       var node = this.nodes.get(value);
       if (!node) {
         node = this.conspiracy.clone();
-        this.nodes.set(value, node);
+        if (!primitive) this.nodes.set(value, node);
       }
-      var scope = {
-        [this.index]: key,
-        ...context,
-        ...value
-      };
       node.update(scope);
       if (cursor.nextSibling != node.element) {
-        cursor.parentElement.insertBefore(node.element, cursor.nextSibling);
+        // special case single-item removals by checking the next node
+        if (cursor?.nextSibling?.nextSibling == node.element) {
+          cursor.nextSibling.remove();
+        } else {
+          insertAfter(cursor, node.element);
+        }
       }
       cursor = node.element;
     }
+    // erase nodes that weren't in our array
     while (cursor.nextSibling && cursor.nextSibling != this.ender) {
-      console.log(cursor.nextSibling);
       cursor.nextSibling.remove();
     }
   }

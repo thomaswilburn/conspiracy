@@ -18,7 +18,11 @@
   font-size: 400%;
 }
 
-.suffix {
+.prefix {
+  cursor: pointer;
+}
+
+.prefix, .suffix {
   font-weight: bold;
 }
 
@@ -27,7 +31,12 @@
 }
   </style>
   <div class="time">
-    <div class="big" on:click="toggleMilitary">
+    <div class="prefix" on:click="toggleMilitary">
+      <span class:faded="use24Hours">12hr</span>
+      <hr>
+      <span class:faded.not="use24Hours">24hr</span>
+    </div>
+    <div class="big">
       <embed text:=formattedTime.hours>:<embed text:=formattedTime.minutes>:<embed text:=formattedTime.seconds>
     </div>
     <div class="suffix">
@@ -60,8 +69,10 @@
   margin-top: 20px;
   padding-top: 20px;
   align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
 
-  h2 {
+  & h2 {
     margin: 0;
     font-size: 200%;
   }
@@ -73,12 +84,10 @@
       <clock-face></clock-face>
     </div>
     <div ref:there class="there">
-      (worldwide)
-      <div attr:data-index="$" class="location" each:="clocks">
+      <div attr:data-index="$" class="location" each:="clocks" attr:data-location="label">
         <h2><!-- text:label --></h2>
         <clock-face attr:offset="offset" prop:offsetValue="offset"></clock-face>
       </div>
-      (click to see 24-hour time)
     </div>
   </div>
 </template>
@@ -142,12 +151,32 @@ customElements.define("clock-face", ClockFace);
 var clocks = [
   { label: "Washington", offset: +1 },
   { label: "Seattle", offset: -2 },
-  { label: "Barcelona", offset: +7 }
+  { label: "Barcelona", offset: +7 },
+  { label: "Tokyo", offset: -9 }
 ];
+
+function doubleRAF(fn) {
+  requestAnimationFrame(() => requestAnimationFrame(fn));
+}
+
 var app = new Conspiracy(multiple, { clean: true }).renderTo(host, { clocks });
-// setInterval(() => {
-//   clocks.unshift(clocks.pop());
-//   app.update({ clocks });
-// }, 4000);
+if (true) setInterval(() => {
+  clocks.push(clocks.shift());
+  // FLIP, baby
+  var locations = [...host.querySelectorAll(".there .location")];
+  var elements = new Map(locations.map(clock => [clock, clock.getBoundingClientRect()]));
+  app.update({ clocks });
+  for (let place of locations) {
+    var previous = elements.get(place);
+    var now = place.getBoundingClientRect();
+    var translate = `${previous.left - now.left}px ${previous.top - now.top}px`;
+    place.style.translate = translate;
+    place.style.transition = null;
+    doubleRAF(() => {
+      place.style.transition = `200ms all ease`;
+      place.style.translate = "";
+    });
+  }
+}, 4000);
 
 </script>
