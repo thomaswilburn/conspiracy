@@ -59,6 +59,7 @@
   border-top: 2px dashed black;
   margin-top: 20px;
   padding-top: 20px;
+  align-items: center;
 
   h2 {
     margin: 0;
@@ -72,10 +73,12 @@
       <clock-face></clock-face>
     </div>
     <div ref:there class="there">
-      <div class="location" each:="clocks" attr:data-index="$">
+      (worldwide)
+      <div attr:data-index="$" class="location" each:="clocks">
         <h2><!-- text:label --></h2>
         <clock-face attr:offset="offset" prop:offsetValue="offset"></clock-face>
       </div>
+      (click to see 24-hour time)
     </div>
   </div>
 </template>
@@ -142,5 +145,9 @@ var clocks = [
   { label: "Barcelona", offset: +7 }
 ];
 var app = new Conspiracy(multiple, { clean: true }).renderTo(host, { clocks });
+// setInterval(() => {
+//   clocks.unshift(clocks.pop());
+//   app.update({ clocks });
+// }, 4000);
 
 </script>

@@ -128,15 +128,20 @@ export class EachPin extends Pin {
     this.node = new Comment(key);
     this.ender = new Comment("/" + key);
     var template = document.createElement("template");
-    node.removeAttribute(EachPin.directive + ":" + params);
-    template.content.replaceChildren(node);
+    var clone = node.cloneNode(true);
+    clone.removeAttribute(EachPin.directive + ":" + params);
+    template.content.append(clone);
     this.conspiracy = new Conspiracy(template);
   }
 
   update(collection, context) {
     if (!collection) collection = [];
     if (!this.ender.parentElement) {
-      this.node.parentNode.insertBefore(this.ender, this.node);
+      if (this.node.nextSibling) {
+        this.node.parentNode.insertBefore(this.ender, this.node.nextSibling);
+      } else {
+        this.node.parentNode.append(this.ender);
+      }
     }
     var cursor = this.node;
     var key = -1;
@@ -163,6 +168,7 @@ export class EachPin extends Pin {
       cursor = node.element;
     }
     while (cursor.nextSibling && cursor.nextSibling != this.ender) {
+      console.log(cursor.nextSibling);
       cursor.nextSibling.remove();
     }
   }

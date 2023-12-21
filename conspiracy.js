@@ -47,10 +47,7 @@ export class ConspiracyBinding {
 }
 
 export class Conspiracy {
-  static directives = {
-    terminal: {},
-    branch: {}
-  };
+  static registry = {};
   paths = [];
   template = null;
   targets = new WeakMap();
@@ -65,8 +62,9 @@ export class Conspiracy {
     this.template = template;
   }
 
-  generateElementPin(registry, elements) {
-    return Object.assign({}, {
+  getLocalDirectives(elements) {
+    return {
+      ...Conspiracy.registry,
       ref: class ElementPin {
         static forget = true;
         attach(node, params) {
@@ -74,7 +72,7 @@ export class Conspiracy {
           elements[params] = node;
         }
       }
-    }, registry);
+    };
   }
 
   cloneFromPaths() {
@@ -82,10 +80,7 @@ export class Conspiracy {
     var refs = {};
     var pins = [];
 
-    var directives = {
-      ...Conspiracy.directives,
-      branch: this.generateElementPin(Conspiracy.directives.branch, refs)
-    };
+    var directives = this.getLocalDirectives(refs);
 
     dom.append(this.template.content.cloneNode(true));
 
@@ -107,10 +102,7 @@ export class Conspiracy {
     var refs = {};
     var pins = [];
 
-    var directives = {
-      ...Conspiracy.directives,
-      branch: this.generateElementPin(Conspiracy.directives.branch, refs)
-    };
+    var directives = this.getLocalDirectives(refs);
 
     var crawl = (node, cloneParent, path = []) => {
       var clone = node.cloneNode();
@@ -119,7 +111,7 @@ export class Conspiracy {
         // special case text comments
         var [ directive, params ] = node.nodeValue.trim().split(":");
         if (directive == "text") {
-          var PinClass = directives.branch[directive];
+          var PinClass = directives[directive];
           var pin = new PinClass();
           pin.attach(null, params);
           clone = pin.node;
@@ -127,23 +119,25 @@ export class Conspiracy {
           this.paths.push({ PinClass, params, path });
         }
       } else if (node.nodeType == Node.ELEMENT_NODE) {
-        for (var attr of node.attributes) {
-          var { name, value } = attr;
-          if (!name.match(/:/)) continue;
+        // filter attributes for class matches and sort by terminal status
+        var matches = [];
+        for (var { name, value} of node.attributes) {
+          if (!name.includes(":")) continue;
           var [ d, params ] = name.split(":");
-          var PinClass = directives.terminal[d] || directives.branch[d];
-          if (PinClass) {
-            var pin = new PinClass();
-            if (PinClass.terminal) {
-              terminated = true;
-              pin.attach(node, params, value);
-            } else {
-              pin.attach(clone, params, value);
-            }
-            clone = pin.node;
-            if (!PinClass.forget) pins.push(pin);
-            this.paths.push({ PinClass, params, value, path });
+          if (d in directives) matches.push([directives[d], params, value]);
+        }
+        matches.sort(([a], [b]) => (b.terminal ? 1 : 0) - (a.terminal ? 1 : 0));
+        for (var [PinClass, params, value] of matches) {
+          var pin = new PinClass();
+          if (PinClass.terminal) {
+            terminated = true;
+            pin.attach(node, params, value);
+          } else {
+            pin.attach(clone, params, value);
           }
+          clone = pin.node;
+          if (!PinClass.forget) pins.push(pin);
+          this.paths.push({ PinClass, params, value, path });
           if (terminated) break;
         }
       }
@@ -178,7 +172,6 @@ export class Conspiracy {
   }
 
   static registerDirective(Class) {
-    var registry = this.directives[Class.terminal ? "terminal" : "branch"];
-    registry[Class.directive] = Class;
+    this.registry[Class.directive] = Class;
   }
 }
