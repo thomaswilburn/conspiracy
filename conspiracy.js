@@ -67,9 +67,9 @@ export class Conspiracy {
       ...Conspiracy.registry,
       ref: class ElementPin {
         static forget = true;
-        attach(node, params) {
+        attach(node, params, value) {
           this.node = node;
-          elements[params] = node;
+          elements[params || value] = node;
         }
       }
     };
