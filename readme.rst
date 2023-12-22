@@ -191,6 +191,10 @@ You can also register a listener with the standard options after the event name.
 
     <input on:input.once="firstTimeOnly">
 
+A pattern that's sometimes used with custom elements is to pass the element itself to the event listener and implement ``handleEvent()``, which will be called in the correct context. The "handle:" directive supports this, and is well-suited for things like media elements, which dispatch a number of events without much internal state::
+
+    <audio handle:loaded.canplay.play.pause.timeupdate.ended ></audio>
+
 References
 ----------
 

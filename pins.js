@@ -190,3 +190,26 @@ export class EachPin extends Pin {
     }
   }
 }
+
+export class HandlePin {
+  static directive = "handle";
+  key = "";
+  value = null;
+
+  attach(node, params, value) {
+    this.node = node;
+    this.events = params.split(".");
+  }
+
+  update(_, context) {
+    if (this.value) {
+      for (var e of this.events) {
+        this.node.removeEventListener(e, this.value);
+      }
+    }
+    for (var e of this.events) {
+      this.node.addEventListener(e, context);
+    }
+    this.value = context;
+  }
+}

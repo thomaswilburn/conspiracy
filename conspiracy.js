@@ -1,6 +1,7 @@
 export function getPath(target, pathstring) {
   var path = pathstring.split(".");
   for (var segment of path) {
+    if (!segment) continue;
     target = target[segment];
     if (target == undefined) break;
   }
