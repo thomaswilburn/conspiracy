@@ -37,12 +37,12 @@
       <span class:faded.not="use24Hours">24hr</span>
     </div>
     <div class="big">
-      <embed text:=formattedTime.hours>:<embed text:=formattedTime.minutes>:<embed text:=formattedTime.seconds>
+      <embed text:=time.hours>:<embed text:=time.minutes>:<embed text:=time.seconds>
     </div>
     <div class="suffix">
-      <span class:faded="formattedTime.pm">AM</span>
+      <span class:faded="time.pm">AM</span>
       <hr>
-      <span class:faded.not="formattedTime.pm">PM</span>
+      <span class:faded.not="time.pm">PM</span>
     </div>
   </div>
 </template>
@@ -101,29 +101,56 @@
 
 import { Conspiracy, ConspiracyElement } from "./index.js";
 
-class ClockFace extends ConspiracyElement {
-  static template = window.clock;
+class Ticker extends EventTarget {
+  interval = null;
 
   constructor() {
     super();
+    this.tick = this.tick.bind(this);
+    this.start();
+  }
+
+  start() {
+    if (this.interval) return;
+    this.interval = window.setInterval(this.tick, 1000);
+  }
+
+  stop() {
+    if (!this.interval) return;
+    clearInterval(this.interval);
+    this.interval = null;
+  }
+
+  tick() {
+    this.dispatchEvent(new Event("tick"));
+  }
+}
+
+var ticker = new Ticker();
+
+class ClockFace extends ConspiracyElement {
+  static template = window.clock;
+  time = {};
+
+  constructor() {
+    super();
+    this.updateTime = this.updateTime.bind(this);
     this.toggleMilitary = this.toggleMilitary.bind(this);
     this.use24Hours = false;
+    this.updateTime();
   }
 
   connectedCallback() {
     this.disconnectedCallback();
-    this.interval = setInterval(this.render, 1000);
+    ticker.addEventListener("tick", this.updateTime);
     this.render();
   }
 
   disconnectedCallback() {
-    if (this.interval) {
-      clearInterval(this.interval);
-      this.interval = null;
-    }
+    ticker.removeEventListener("tick", this.updateTime);
   }
 
-  get formattedTime() {
+  updateTime() {
     var offset = (this.getAttribute("offset") || 0) * 60 * 60 * 1000;
     var now = Date.now()
     var time = new Date(now + offset);
@@ -135,17 +162,18 @@ class ClockFace extends ConspiracyElement {
         hours -= 12;
       }
     }
-    return {
+    this.time = {
       hours: String(hours).padStart(2, "0"),
       minutes: String(time.getMinutes()).padStart(2, "0"),
       seconds: String(time.getSeconds()).padStart(2, "0"),
       pm
-    }
+    };
+    this.render();
   }
 
   toggleMilitary() {
     this.use24Hours = !this.use24Hours;
-    this.render();
+    this.updateTime();
   }
 }
 
