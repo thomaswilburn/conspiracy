@@ -21,7 +21,7 @@ Create a Conspiracy template by either passing a template tag to the constructor
   var contents = await fetch("template.html").then(r => r.text())
   var template = Conspiracy.fromString(contents);
 
-Once a Conspiracy object is created, you can clone it to create a new ConspiracyBinding. The binding object provides access to the new DOM, as well as methods that can be used to update it.
+You only need to create one Conspiracy per template. Once it's initialized, you can clone it to create a new ConspiracyBinding for the DOM section you want to populate. The binding object provides access to the rendered DOM, as well as methods that can be used to update it.
 
 .. code:: javascript
 
@@ -201,13 +201,13 @@ References
 If you need access to an element, such as for populating a list, you can tag it with a ``ref:`` directive and it will be available on the ConspiracyBinding object::
 
     <main ref:outer>
-      <section ref:inner>
+      <section ref:="innerSection">
         <img ref:portrait>
       </section>
     </main>
 
     // when the following is cloned:
-    // binding.refs = { outer: <main>, inner: <section>, portrait: <img> }
+    // binding.refs = { outer: <main>, innerSection: <section>, portrait: <img> }
 
 Properties
 ----------
