@@ -8,11 +8,11 @@ export function getPath(target, pathstring) {
   return target;
 }
 
-function eachChild(target, fn) {
+function* childNodes(target) {
   var child = target.firstChild;
   var i = 0;
   while (child) {
-    fn(child, i++);
+    yield [child, i++];
     child = child.nextSibling;
   }
 }
@@ -144,10 +144,14 @@ export class Conspiracy {
       }
       cloneParent.append(clone);
       if (terminated) return;
-      eachChild(node, (child, i) => crawl(child, clone, [...path, i++]));
+      for (var [child, i] of childNodes(node)) {
+        crawl(child, clone, [...path, i++])
+      }
     }
 
-    eachChild(this.template.content, (child, i) => crawl(child, dom, [i]))
+    for (var [child, i] of childNodes(this.template.content)) {
+      crawl(child, dom, [i])
+    }
 
     return { dom, pins, refs };
   }
