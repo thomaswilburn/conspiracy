@@ -102,8 +102,9 @@ export class PropertyPin extends Pin {
 
   attach(node, params, keypath) {
     this.node = node;
-    this.key = keypath;
-    this.property = params;
+    var { key, prop } = keypath.match(/((?<prop>\w+)\s*=\s*)?(?<key>[\w\.]+)/).groups;
+    this.key = key;
+    this.property = prop || params;
   }
 
   update(v) {
