@@ -105,9 +105,10 @@ export class EventPin extends Pin {
 
 export class PropertyPin extends Pin {
   static directive = "prop";
+  static pattern = /((?<prop>\w+)\s*=\s*)?(?<key>[\w\.]+)/;
 
   constructor(node, params, keypath) {
-    var { key, prop } = keypath.match(/((?<prop>\w+)\s*=\s*)?(?<key>[\w\.]+)/).groups;
+    var { key, prop } = keypath.match(PropertyPin.pattern).groups;
     super(node, key);
     this.property = prop || params;
   }
@@ -129,12 +130,13 @@ function insertAfter(after, node) {
 export class EachPin extends Pin {
   static directive = "each";
   static terminal = true;
+  static pattern = /((?<index>\w+)\s+in\s+)?(?<key>[\w\.]+$)/;
   index = "#";
   nodes = new WeakMap();
   conspiracy;
 
   constructor(node, params, loop) {
-    var { key, index } = loop.match(/((?<index>\w+)\s+in\s+)?(?<key>[\w\.]+$)/).groups;
+    var { key, index } = loop.match(EachPin.pattern).groups;
     super(new Comment(key), key);
     this.index = index ?? this.index;
     this.ender = new Comment("/" + key);

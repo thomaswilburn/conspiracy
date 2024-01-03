@@ -40,10 +40,10 @@ export class ConspiracyBinding {
     for (var pin of this.pins) {
       pin.destroy();
     }
-    this.pins = null;
-    this.refs = null;
+    this.pins = [];
+    this.refs = {};
     this.dom = null;
-    this.elements = null;
+    this.element = null;
   }
 }
 

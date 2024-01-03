@@ -245,7 +245,10 @@ Internally, directives are just classes that implement the Pin interface::
 
       // called during cloning with values from pin:params="path"
       constructor(node, params, path) {
-        this.node = node;
+        // handling params is up to you
+        // the superclass expects to see a node at least
+        // optionally provide the keypath as well
+        super(node, path);
       }
 
       // called during render with the current data value for its keypath
