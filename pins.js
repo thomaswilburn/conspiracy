@@ -164,7 +164,7 @@ export class EachPin extends Pin {
       var primitive = false;
       // handle primitive values
       if (!(value instanceof Object)) {
-        scope = { "#": key, "@": value };
+        scope = { [this.index]: key, "@": value };
         primitive = true;
       } else {
         scope = {
