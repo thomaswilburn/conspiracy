@@ -214,9 +214,17 @@ Properties
 
 Custom elements may take in JavaScript values directly using properties, and these can also be set and updated using Conspiracy using the ``prop`` directive::
 
-    <input prop:value="initial">
+    <input prop:value="rating">
 
 These bindings are one-way only -- they set the property, but in order to read it or react to changes, you'll need to set an event listener or use a reference.
+
+Because HTML attributes are case-insensitive, the property directive also supports an alternative syntax inside the attribute value itself, in the form of "property = key.path". For example, if you need to set the ``currentTime`` property on a media element::
+
+    <!-- this won't work, because it will be normalized to "currenttime" during parsing -->
+    <audio prop:currentTime="ui.seekInput.value"></audio>
+
+    <!-- use the attribute value to assign the property instead -->
+    <audio prop:="currentTime = ui.seekInput.value"></audio>
 
 Custom Directives
 =================
