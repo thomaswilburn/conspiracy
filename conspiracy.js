@@ -20,8 +20,8 @@ function* childNodes(target) {
 export class ConspiracyBinding {
   pins = [];
   refs = {};
-  dom = null;
-  element = null;
+  dom;
+  element;
 
   constructor(result, data) {
     Object.assign(this, result);
@@ -68,7 +68,7 @@ export class Conspiracy {
       ...Conspiracy.registry,
       ref: class ElementPin {
         static forget = true;
-        attach(node, params, value) {
+        constructor(node, params, value) {
           this.node = node;
           elements[params || value] = node;
         }
@@ -85,11 +85,10 @@ export class Conspiracy {
 
     dom.append(this.template.content.cloneNode(true));
 
-    for (var { PinClass, path, params, value } of this.paths) {
+    for (var { Pin, path, params, value } of this.paths) {
       var clone = this.findByIndices(dom, path);
-      var pin = new PinClass();
-      pin.attach(clone, params, value);
-      if (!PinClass.forget) pins.push(pin);
+      var pin = new Pin(clone, params, value);
+      if (!Pin.forget) pins.push(pin);
       if (pin.node && pin.node != clone) {
         clone.parentNode.replaceChild(pin.node, clone);
       }
@@ -107,43 +106,33 @@ export class Conspiracy {
 
     var crawl = (node, cloneParent, path = []) => {
       var clone = node.cloneNode();
-      var terminated = false;
+      var matches = [];
       if (node.nodeType == Node.COMMENT_NODE) {
         // special case text comments
         var [ directive, params ] = node.nodeValue.trim().split(":");
         if (directive == "text") {
-          var PinClass = directives[directive];
-          var pin = new PinClass();
-          pin.attach(null, params);
-          clone = pin.node;
-          pins.push(pin);
-          this.paths.push({ PinClass, params, path });
+          matches.push([directives.text, params, value]);
         }
       } else if (node.nodeType == Node.ELEMENT_NODE) {
         // filter attributes for class matches and sort by terminal status
-        var matches = [];
         for (var { name, value} of node.attributes) {
           if (!name.includes(":")) continue;
           var [ d, params ] = name.split(":");
           if (d in directives) matches.push([directives[d], params, value]);
         }
         matches.sort(([a], [b]) => (b.terminal ? 1 : 0) - (a.terminal ? 1 : 0));
-        for (var [PinClass, params, value] of matches) {
-          var pin = new PinClass();
-          if (PinClass.terminal) {
-            terminated = true;
-            pin.attach(node, params, value);
-          } else {
-            pin.attach(clone, params, value);
-          }
-          clone = pin.node;
-          if (!PinClass.forget) pins.push(pin);
-          this.paths.push({ PinClass, params, value, path });
-          if (terminated) break;
+      }
+      for (var [Pin, params, value] of matches) {
+        var pin = new Pin(Pin.terminal ? node : clone, params, value);
+        clone = pin.node;
+        if (!Pin.forget) pins.push(pin);
+        this.paths.push({ Pin, params, value, path });
+        if (Pin.terminal) {
+          cloneParent.append(clone);
+          return;
         }
       }
       cloneParent.append(clone);
-      if (terminated) return;
       for (var [child, i] of childNodes(node)) {
         crawl(child, clone, [...path, i++])
       }

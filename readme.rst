@@ -244,13 +244,15 @@ Internally, directives are just classes that implement the Pin interface::
       node = null;
 
       // called during cloning with values from pin:params="path"
-      attach(node, params, path) { }
+      constructor(node, params, path) {
+        this.node = node;
+      }
 
       // called during render with the current data value for its keypath
       // as well as the root data object
       update(value, data) { }
     }
 
-During parsing, Conspiracy will call ``attach()`` for any matching attributes. If the Pin's ``node`` property is different from the node that was passed in, it will be used as a replacement in the output DOM. If your pin does not need to update with values during rendering, set the static ``forget`` class field to ``true`` (this is used for the ``refs`` lookup on the binding object). Pins marked ``terminal`` are processed first and stop the parser from descending further, which is primarily useful for structural directives like iteration.
+During parsing, Conspiracy will generate a Pin for any matching attributes. If the Pin's ``node`` property is different after construction from the node that was passed in, it will be used as a replacement in the output DOM. If your pin does not need to update with values during rendering, set the static ``forget`` class field to ``true`` (this is used for the ``refs`` lookup on the binding object). Pins marked ``terminal`` are processed first and stop the parser from descending further, which is primarily useful for structural directives like iteration.
 
 To add a pin, call ``Conspiracy.registerDirective()`` and pass in your class.

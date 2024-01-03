@@ -1,22 +1,27 @@
 import { Conspiracy } from "./conspiracy.js";
 
-class Pin {
-  key = null;
-  value = null;
-  node = null;
+export class Pin {
+  key;
+  value;
+  node;
+
+  constructor(node, key) {
+    this.node = node;
+    this.key = key;
+  }
 
   destroy() {
     this.value = null;
+    this.node = null;
   }
 }
 
 export class TextPin extends Pin {
   static directive = "text";
 
-  attach(node, params, attrValue) {
-    this.node = new Text();
-    this.key = params || attrValue;
-    return this.node;
+  constructor(_, params, attrValue) {
+    var node = new Text();
+    super(node, params || attrValue);
   }
 
   update(v) {
@@ -27,15 +32,14 @@ export class TextPin extends Pin {
 
 export class AttributePin extends Pin {
   static directive = "attr";
-  name = null;
   options = {};
+  name;
 
-  attach(node, params, attrValue) {
-    this.key = attrValue;
+  constructor(node, params = "", key = "") {
+    super(node, key);
     var [ name, ...options ] = params.split(".");
     this.name = name;
     this.options = Object.fromEntries(options.map(o => [o, true]));
-    this.node = node;
   }
 
   update(v) {
@@ -52,15 +56,14 @@ export class AttributePin extends Pin {
 
 export class ClassPin extends Pin {
   static directive = "class";
-  name = null;
   options = {};
+  name;
 
-  attach(node, params, attrValue) {
-    this.key = attrValue;
+  constructor(node, params, key) {
+    super(node, key);
     var [name, ...options] = params.split(".");
     this.name = name;
     this.options = Object.fromEntries(options.map(o => [o, true]));
-    this.node = node;
   }
 
   update(v) {
@@ -73,8 +76,7 @@ export class ClassPin extends Pin {
 
 export class EventPin extends Pin {
   static directive = "on";
-  node = null;
-  type = null;
+  event;
 
   handleEvent(e) {
     if (this.value) {
@@ -82,11 +84,11 @@ export class EventPin extends Pin {
     }
   }
 
-  attach(node, params, key) {
-    this.key = key;
+  constructor(node, params, key) {
+    super(node, key);
     var [ event, ...args ] = params.split(".");
+    this.event = event;
     var options = Object.fromEntries(args.map(s => [s, true]));
-    this.node = node;
     this.node.addEventListener(event, this, options);
   }
 
@@ -94,16 +96,19 @@ export class EventPin extends Pin {
     if (v == this.value) return;
     this.value = v;
   }
+
+  destroy() {
+    this.node.removeEventListener(this.event, this);
+    super.destroy();
+  }
 }
 
 export class PropertyPin extends Pin {
   static directive = "prop";
-  value = null;
 
-  attach(node, params, keypath) {
-    this.node = node;
+  constructor(node, params, keypath) {
     var { key, prop } = keypath.match(/((?<prop>\w+)\s*=\s*)?(?<key>[\w\.]+)/).groups;
-    this.key = key;
+    super(node, key);
     this.property = prop || params;
   }
 
@@ -124,17 +129,14 @@ function insertAfter(after, node) {
 export class EachPin extends Pin {
   static directive = "each";
   static terminal = true;
-  key = null;
-  value = null;
   index = "#";
-  conspiracy = null;
   nodes = new WeakMap();
+  conspiracy;
 
-  attach(node, params, loop) {
+  constructor(node, params, loop) {
     var { key, index } = loop.match(/((?<index>\w+)\s+in\s+)?(?<key>[\w\.]+$)/).groups;
-    this.key = key;
+    super(new Comment(key), key);
     this.index = index ?? this.index;
-    this.node = new Comment(key);
     this.ender = new Comment("/" + key);
     var template = document.createElement("template");
     var clone = node.cloneNode(true);
@@ -192,13 +194,11 @@ export class EachPin extends Pin {
   }
 }
 
-export class HandlePin {
+export class HandlePin extends Pin {
   static directive = "handle";
-  key = "";
-  value = null;
 
-  attach(node, params, value) {
-    this.node = node;
+  constructor(node, params, value) {
+    super(node);
     this.events = params.split(".");
   }
 
