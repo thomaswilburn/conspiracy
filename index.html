@@ -86,7 +86,7 @@
     <div ref:there class="there">
       <div attr:data-index="$" class="location" each:="clocks" attr:data-location="label">
         <h2><!-- text:label --></h2>
-        <clock-face attr:offset="offset" prop:offsetValue="offset"></clock-face>
+        <clock-face attr:offset="offset" prop:="offsetValue = offset"></clock-face>
       </div>
     </div>
   </div>
@@ -138,6 +138,12 @@ class ClockFace extends ConspiracyElement {
     this.toggleMilitary = this.toggleMilitary.bind(this);
     this.use24Hours = false;
     this.updateTime();
+    // handle props added prior to definition
+    if (this.offsetValue) {
+      var offset = this.offsetValue;
+      delete this.offsetValue;
+      this.offsetValue = offset;
+    }
   }
 
   connectedCallback() {
@@ -174,6 +180,10 @@ class ClockFace extends ConspiracyElement {
   toggleMilitary() {
     this.use24Hours = !this.use24Hours;
     this.updateTime();
+  }
+
+  set offsetValue(v) {
+    console.log(this, v);
   }
 }
 
